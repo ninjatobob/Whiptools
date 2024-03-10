@@ -28,7 +28,7 @@ namespace Whiptools
             try
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Mangled Files (*.BM;*.DRH;*.KC;*.RAW;*.TRK)|*.BM;*.DRH;*.KC;*.RAW;*.TRK|All Files (*.*)|*.*";
+                openFileDialog.Filter = "Mangled Files (*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK)|*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK|All Files (*.*)|*.*";
                 openFileDialog.Title = "Select Mangled Files";
                 openFileDialog.Multiselect = true;
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
