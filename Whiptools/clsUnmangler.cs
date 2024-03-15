@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Whiptools
 {
@@ -22,10 +23,10 @@ namespace Whiptools
                     inputPos++;
                     for (int i = 0; i < byteValue; i++)
                     {
-                        outputData[outputPos] = inputData[inputPos];
-                        inputPos++;
-                        outputPos++;
+                        outputData[outputPos + i] = inputData[inputPos + i];
                     }
+                    inputPos += byteValue;
+                    outputPos += byteValue;
                 }
                 else if (byteValue <= 0x4F) // 0x40 to 0x4F: generate ascending bytes based on last 2 bytes
                 {
@@ -46,7 +47,7 @@ namespace Whiptools
                         short newShort = (short)(BitConverter.ToInt16(outputData, outputPos - 2) + delta);
                         outputData[outputPos] = (byte)(newShort & 0xFF);
                         outputData[outputPos + 1] = (byte)((newShort >> 8) & 0xFF);
-                        outputPos = outputPos + 2;
+                        outputPos += 2;
                     }
                     inputPos++;
                 }
@@ -65,7 +66,7 @@ namespace Whiptools
                     {
                         outputData[outputPos] = outputData[outputPos - 2];
                         outputData[outputPos + 1] = outputData[outputPos - 1];
-                        outputPos = outputPos + 2;
+                        outputPos += 2;
                     }
                     inputPos++;
                 }
@@ -75,7 +76,7 @@ namespace Whiptools
                     outputData[outputPos] = outputData[outputPos - offset - 3];
                     outputData[outputPos + 1] = outputData[outputPos - offset - 2];
                     outputData[outputPos + 2] = outputData[outputPos - offset - 1];
-                    outputPos = outputPos + 3;
+                    outputPos += 3;
                     inputPos++;
                 }
                 else if (byteValue <= 0xDF) // 0xC0 to 0xDF: clone using offset and length from next byte
@@ -87,7 +88,7 @@ namespace Whiptools
                         outputData[outputPos] = outputData[outputPos - offset];
                         outputPos++;
                     }
-                    inputPos = inputPos + 2;
+                    inputPos += 2;
                 }
                 else // 0xE0 to 0xFF: clone using offset and length from next 2 bytes
                 {
@@ -98,10 +99,27 @@ namespace Whiptools
                         outputData[outputPos] = outputData[outputPos - offset];
                         outputPos++;
                     }
-                    inputPos = inputPos + 3;
+                    inputPos += 3;
                 }
             }
             return outputData;
+        }
+
+        public static byte[] Mangle(byte[] inputData)
+        {
+            using (MemoryStream outputStream = new MemoryStream())
+            {
+                outputStream.Write(BitConverter.GetBytes(inputData.Length), 0, 4);
+                int inputPos = 0;
+                while (inputPos < inputData.Length)
+                {
+                    int nextLength = Math.Min(inputData.Length - inputPos, 0x3F);
+                    outputStream.Write(BitConverter.GetBytes(nextLength), 0, 1); // 0x00 to 0x3F
+                    outputStream.Write(inputData, inputPos, nextLength);
+                    inputPos += nextLength;
+                }
+                return outputStream.ToArray();
+            }
         }
     }
 }
