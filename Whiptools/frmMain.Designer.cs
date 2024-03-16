@@ -303,7 +303,7 @@
             this.btnMangleFiles.Name = "btnMangleFiles";
             this.btnMangleFiles.Size = new System.Drawing.Size(267, 38);
             this.btnMangleFiles.TabIndex = 1;
-            this.btnMangleFiles.Text = "Mangle Files";
+            this.btnMangleFiles.Text = "Mangle Files (beta)";
             this.btnMangleFiles.UseVisualStyleBackColor = true;
             this.btnMangleFiles.Click += new System.EventHandler(this.btnMangleFiles_Click);
             // 

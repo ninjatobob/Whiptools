@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Diagnostics;
 
 namespace Whiptools
 {
@@ -20,12 +21,10 @@ namespace Whiptools
 
                 if (byteValue <= 0x3F) // 0x00 to 0x3F: read bytes from input
                 {
-                    inputPos++;
-                    for (int i = 0; i < byteValue; i++)
-                    {
-                        outputData[outputPos + i] = inputData[inputPos + i];
-                    }
-                    inputPos += byteValue;
+                    byte[] tempArray = new byte[byteValue];
+                    Array.Copy(inputData, inputPos + 1, tempArray, 0, byteValue);
+                    Array.Copy(tempArray, 0, outputData, outputPos, byteValue);
+                    inputPos += byteValue + 1;
                     outputPos += byteValue;
                 }
                 else if (byteValue <= 0x4F) // 0x40 to 0x4F: generate ascending bytes based on last 2 bytes
@@ -113,13 +112,51 @@ namespace Whiptools
                 int inputPos = 0;
                 while (inputPos < inputData.Length)
                 {
-                    int nextLength = Math.Min(inputData.Length - inputPos, 0x3F);
-                    outputStream.Write(BitConverter.GetBytes(nextLength), 0, 1); // 0x00 to 0x3F
-                    outputStream.Write(inputData, inputPos, nextLength);
-                    inputPos += nextLength;
+                    int[] nextRepeats = FindMaxRepeats(inputData, inputPos);
+                    int offset = nextRepeats[0];
+                    int length = Math.Min(nextRepeats[1], 18);
+                    if (length >= 4) // clone last byte in output
+                    {
+                        if (offset > 0) // output non-repeating bytes
+                        {
+                            outputStream.Write(BitConverter.GetBytes(offset), 0, 1); // 0x00 to 0x3F
+                            outputStream.Write(inputData, inputPos, offset);
+                            inputPos += offset;
+                        }
+                        outputStream.Write(BitConverter.GetBytes(0x60 + length - 3), 0, 1); // 0x60 to 0x6F
+                        inputPos += length;
+                    }
+                    else // no repeating bytes
+                    {
+                        int nextLength = Math.Min(inputData.Length - inputPos, 0x3F);
+                        outputStream.Write(BitConverter.GetBytes(nextLength), 0, 1); // 0x00 to 0x3F
+                        outputStream.Write(inputData, inputPos, nextLength);
+                        inputPos += nextLength;
+                    }
                 }
                 return outputStream.ToArray();
             }
+        }
+
+        // find next string of repeating bytes with length of at least 4, starting in the next 0x3F bytes
+        private static int[] FindMaxRepeats(byte[] inputData, int startPos)
+        {
+            int offset = 0, length = 0;
+            for (int i = startPos; (i < inputData.Length) && (i < startPos + 0x3F); i++)
+            {
+                length = 1;
+                while ((i + length < inputData.Length) && (inputData[i + length] == inputData[i + length - 1]))
+                {
+                    length++;
+                }
+                if (length >= 4)
+                {
+                    offset = i - startPos;
+                    break;
+                }
+            }
+            int[] output = { offset + 1, length - 1 };
+            return output;
         }
     }
 }

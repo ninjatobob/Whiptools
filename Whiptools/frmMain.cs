@@ -36,72 +36,65 @@ namespace Whiptools
 
         private void btnUnmangleFiles_Click(object sender, EventArgs e)
         {
-            try
-            {
-                FileMangling(true);
-            }
-            catch
-            {
-                MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            FileMangling(true);
         }
 
         private void btnMangleFiles_Click(object sender, EventArgs e)
         {
-            try
-            {
-                FileMangling(false);
-            }
-            catch
-            {
-                MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            FileMangling(false);
         }
 
         private void FileMangling(bool unmangle)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = (unmangle ? "Mangled" : "Unmangled") +
-                "Files (*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK)|*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK|All Files (*.*)|*.*";
-            openFileDialog.Title = "Select " + (unmangle ? "Mangled" : "Unmangled") + " Files";
-            openFileDialog.Multiselect = true;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-                folderBrowserDialog.Description = "Save "+ (unmangle ? "un" : "") + "mangled files in:";
-                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            //try
+            //{
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = (unmangle ? "Mangled" : "Unmangled") +
+                    " Files (*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK)|*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK|All Files (*.*)|*.*";
+                openFileDialog.Title = "Select " + (unmangle ? "Mangled" : "Unmangled") + " Files";
+                openFileDialog.Multiselect = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    string outputfile = "";
-                    foreach (String filename in openFileDialog.FileNames)
+                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                    folderBrowserDialog.Description = "Save " + (unmangle ? "un" : "") + "mangled files in:";
+                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                     {
-                        byte[] inputData = File.ReadAllBytes(filename);
-                        outputfile = folderBrowserDialog.SelectedPath + "\\" + Path.GetFileNameWithoutExtension(filename) +
-                            (unmangle ? unmangledSuffix : mangledSuffix) + Path.GetExtension(filename);
-                        if (unmangle)
+                        string outputfile = "";
+                        foreach (String filename in openFileDialog.FileNames)
                         {
-                            File.WriteAllBytes(outputfile, clsUnmangler.Unmangle(inputData));
+                            byte[] inputData = File.ReadAllBytes(filename);
+                            outputfile = folderBrowserDialog.SelectedPath + "\\" + Path.GetFileNameWithoutExtension(filename) +
+                                (unmangle ? unmangledSuffix : mangledSuffix) + Path.GetExtension(filename);
+                            if (unmangle)
+                            {
+                                File.WriteAllBytes(outputfile, clsUnmangler.Unmangle(inputData));
+                            }
+                            else
+                            {
+                                File.WriteAllBytes(outputfile, clsUnmangler.Mangle(inputData));
+                            }
+                        }
+                        string msg = "";
+                        if (openFileDialog.FileNames.Length == 1)
+                        {
+                            msg = "Saved " + outputfile;
                         }
                         else
                         {
-                            File.WriteAllBytes(outputfile, clsUnmangler.Mangle(inputData));
+                            msg = "Saved " + openFileDialog.FileNames.Length + " " + (unmangle ? "un" : "") +
+                                "mangled files in " + folderBrowserDialog.SelectedPath;
                         }
+                        MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-                    string msg = "";
-                    if (openFileDialog.FileNames.Length == 1)
-                    {
-                        msg = "Saved " + outputfile;
-                    }
-                    else
-                    {
-                        msg = "Saved " + openFileDialog.FileNames.Length + " " + (unmangle ? "un" : "") +
-                            "mangled files in " + folderBrowserDialog.SelectedPath;
-                    }
-                    MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-            }
+            //}
+            //catch
+            //{
+            //    MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
 
-        // bitmap viewer
+    // bitmap viewer
 
         private void btnLoadBitmap_Click(object sender, EventArgs e)
         {
