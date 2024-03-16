@@ -46,8 +46,8 @@ namespace Whiptools
 
         private void FileMangling(bool unmangle)
         {
-            //try
-            //{
+            try
+            {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.Filter = (unmangle ? "Mangled" : "Unmangled") +
                     " Files (*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK)|*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK|All Files (*.*)|*.*";
@@ -87,11 +87,11 @@ namespace Whiptools
                         MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //}
+            }
+            catch
+            {
+                MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
     // bitmap viewer
