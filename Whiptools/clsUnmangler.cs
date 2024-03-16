@@ -115,7 +115,7 @@ namespace Whiptools
                     int[] nextRepeats = FindMaxRepeats(inputData, inputPos);
                     int offset = nextRepeats[0];
                     int length = Math.Min(nextRepeats[1], 18);
-                    if (length >= 4) // clone last byte in output
+                    if (length >= 3) // clone last byte in output
                     {
                         if (offset > 0) // output non-repeating bytes
                         {
@@ -138,24 +138,33 @@ namespace Whiptools
             }
         }
 
-        // find next string of repeating bytes with length of at least 4, starting in the next 0x3F bytes
+        // find next string of repeating bytes with length of at least 3, starting in the next 0x3F bytes
         private static int[] FindMaxRepeats(byte[] inputData, int startPos)
         {
             int offset = 0, length = 0;
-            for (int i = startPos; (i < inputData.Length) && (i < startPos + 0x3F); i++)
+            for (int i = Math.Max(startPos, 1); (i < inputData.Length) && (i < startPos + 0x3F); i++)
             {
                 length = 1;
                 while ((i + length < inputData.Length) && (inputData[i + length] == inputData[i + length - 1]))
                 {
                     length++;
                 }
-                if (length >= 4)
+                if (length >= 3)
                 {
                     offset = i - startPos;
                     break;
                 }
             }
-            int[] output = { offset + 1, length - 1 };
+            Debug.WriteLine($"{offset} {length}");
+            int adj = 1;
+            if (startPos != 0)
+            {
+                if ((offset == 0) && (inputData[startPos] == inputData[startPos - 1]))
+                {
+                    adj = 0; // continuation of previous bytes
+                }
+            }
+            int[] output = { offset + adj, length - adj };
             return output;
         }
     }
