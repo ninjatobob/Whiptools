@@ -335,6 +335,7 @@
             this.btnConvertAudio.TabIndex = 14;
             this.btnConvertAudio.Text = "Convert Raw Audio";
             this.btnConvertAudio.UseVisualStyleBackColor = true;
+            this.btnConvertAudio.Click += new System.EventHandler(this.btnConvertAudio_Click);
             // 
             // frmMain
             // 
