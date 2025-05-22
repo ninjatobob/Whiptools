@@ -24,12 +24,17 @@ namespace Whiptools
             Color[] output = new Color[inputArray.Length / 3];
             for (int i = 0; i < output.Length; i++)
             {
-                int R = inputArray[i * 3] << 2;
-                int G = inputArray[i * 3 + 1] << 2;
-                int B = inputArray[i * 3 + 2] << 2;
+                int R = Convert6BitTo8Bit(inputArray[i * 3]);
+                int G = Convert6BitTo8Bit(inputArray[i * 3 + 1]);
+                int B = Convert6BitTo8Bit(inputArray[i * 3 + 2]);
                 output[i] = Color.FromArgb(R, G, B);
             }
             return output;
+        }
+
+        private static int Convert6BitTo8Bit(int input)
+        {
+            return (input << 2) + (input >> 4);
         }
 
         public static Bitmap CreateBitmapFromRGB(int width, int height, byte[] rgbArray)
