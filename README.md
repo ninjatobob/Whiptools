@@ -1,7 +1,7 @@
 # Whiptools
 Tools for decoding and viewing Fatal Racing/Whiplash game files:
 
-- Unmangler and mangler for .BM, .DRH, .HMD, .KC, .RAW, and .TRK files
+- Unmangler for .BM, .DRH, .HMD, .KC, .RAW, and .TRK files
 - Bitmap generation from texture (.BM, .DRH) and palette (.PAL) files
 - Palette file extraction and export to image
 - Conversion of images to .BM/.DRH format
