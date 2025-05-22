@@ -324,7 +324,7 @@ namespace Whiptools
             this.btnConvertCheatAudio.Location = new System.Drawing.Point(280, 19);
             this.btnConvertCheatAudio.Name = "btnConvertCheatAudio";
             this.btnConvertCheatAudio.Size = new System.Drawing.Size(267, 38);
-            this.btnConvertCheatAudio.TabIndex = 14;
+            this.btnConvertCheatAudio.TabIndex = 15;
             this.btnConvertCheatAudio.Text = "Convert Cheat Audio to WAV";
             this.btnConvertCheatAudio.UseVisualStyleBackColor = true;
             this.btnConvertCheatAudio.Click += new System.EventHandler(this.btnConvertCheatAudio_Click);
