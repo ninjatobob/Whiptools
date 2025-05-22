@@ -351,13 +351,24 @@ namespace Whiptools
 
         // audio tools
 
-        private void btnConvertAudio_Click(object sender, EventArgs e)
+        private void btnConvertRAWAudio_Click(object sender, EventArgs e)
+        {
+            ConvertAudio(false);
+        }
+
+        private void btnConvertCheatAudio_Click(object sender, EventArgs e)
+        {
+            ConvertAudio(true);
+        }
+
+        private void ConvertAudio(bool cheatMode)
         {
             try
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Whiplash Audio (*.RAW)|*.RAW|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select Raw Audio Files";
+                openFileDialog.Filter = "Whiplash " +
+                    (cheatMode ? "Cheat Audio (*.KC)|*.KC" : "Raw Audio (*.RAW)|*.RAW") + "|All Files (*.*)|*.*";
+                openFileDialog.Title = "Select " + (cheatMode ? "Cheat" : "Raw") + " Audio Files";
                 openFileDialog.Multiselect = true;
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -369,9 +380,9 @@ namespace Whiptools
                         foreach (String filename in openFileDialog.FileNames)
                         {
                             byte[] rawData = File.ReadAllBytes(filename);
-                            byte[] wavData = clsAudioConverter.RawToWav(rawData);
+                            byte[] wavData = clsAudioConverter.RawToWav(cheatMode ? clsUnmangler.DecodeKC(rawData) : rawData);
                             outputfile = folderBrowserDialog.SelectedPath + "\\" +
-                                Path.GetFileNameWithoutExtension(filename) + ".WAV";
+                                Path.GetFileName(filename) + ".WAV";
                             outputfile = outputfile.Replace(unmangledSuffix, "");
                             File.WriteAllBytes(outputfile, wavData);
                         }

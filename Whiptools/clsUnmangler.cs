@@ -103,5 +103,23 @@ namespace Whiptools
             }
             return outputData;
         }
+
+        public static byte[] DecodeKC(byte[] inputData)
+        {
+            int length = inputData.Length;
+            byte[] outputData = new byte[length];
+
+            int a = 0x96; // super secret numbers
+            int b = 0x73;
+
+            for (int i = 0; i < length; i++)
+            {
+                int c = (a + b) & 0xFF;
+                outputData[i] = (byte)(inputData[i] ^ c);
+                b = a;
+                a = c;
+            }
+            return outputData;
+        }
     }
 }

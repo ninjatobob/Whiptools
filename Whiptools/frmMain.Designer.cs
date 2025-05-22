@@ -1,4 +1,6 @@
-﻿namespace Whiptools
+﻿using System.Windows.Forms;
+
+namespace Whiptools
 {
     partial class frmMain
     {
@@ -54,7 +56,8 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btnUnmangle = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.btnConvertAudio = new System.Windows.Forms.Button();
+            this.btnConvertCheatAudio = new System.Windows.Forms.Button();
+            this.btnConvertRAWAudio = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -87,7 +90,7 @@
             // 
             this.btnExportPalette.Location = new System.Drawing.Point(442, 95);
             this.btnExportPalette.Name = "btnExportPalette";
-            this.btnExportPalette.Size = new System.Drawing.Size(106, 36);
+            this.btnExportPalette.Size = new System.Drawing.Size(105, 36);
             this.btnExportPalette.TabIndex = 7;
             this.btnExportPalette.Text = "Export Palette";
             this.btnExportPalette.UseVisualStyleBackColor = true;
@@ -195,7 +198,7 @@
             // 
             this.btnViewBitmal.Location = new System.Drawing.Point(6, 146);
             this.btnViewBitmal.Name = "btnViewBitmal";
-            this.btnViewBitmal.Size = new System.Drawing.Size(542, 34);
+            this.btnViewBitmal.Size = new System.Drawing.Size(541, 34);
             this.btnViewBitmal.TabIndex = 8;
             this.btnViewBitmal.Text = "View Image";
             this.btnViewBitmal.UseVisualStyleBackColor = true;
@@ -307,7 +310,8 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.btnConvertAudio);
+            this.groupBox4.Controls.Add(this.btnConvertCheatAudio);
+            this.groupBox4.Controls.Add(this.btnConvertRAWAudio);
             this.groupBox4.Location = new System.Drawing.Point(13, 446);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(555, 70);
@@ -315,15 +319,25 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Audio Tools";
             // 
-            // btnConvertAudio
+            // btnConvertCheatAudio
             // 
-            this.btnConvertAudio.Location = new System.Drawing.Point(6, 19);
-            this.btnConvertAudio.Name = "btnConvertAudio";
-            this.btnConvertAudio.Size = new System.Drawing.Size(541, 38);
-            this.btnConvertAudio.TabIndex = 14;
-            this.btnConvertAudio.Text = "Convert Raw Audio";
-            this.btnConvertAudio.UseVisualStyleBackColor = true;
-            this.btnConvertAudio.Click += new System.EventHandler(this.btnConvertAudio_Click);
+            this.btnConvertCheatAudio.Location = new System.Drawing.Point(280, 19);
+            this.btnConvertCheatAudio.Name = "btnConvertCheatAudio";
+            this.btnConvertCheatAudio.Size = new System.Drawing.Size(267, 38);
+            this.btnConvertCheatAudio.TabIndex = 14;
+            this.btnConvertCheatAudio.Text = "Convert Cheat Audio to WAV";
+            this.btnConvertCheatAudio.UseVisualStyleBackColor = true;
+            this.btnConvertCheatAudio.Click += new System.EventHandler(this.btnConvertCheatAudio_Click);
+            // 
+            // btnConvertRAWAudio
+            // 
+            this.btnConvertRAWAudio.Location = new System.Drawing.Point(6, 19);
+            this.btnConvertRAWAudio.Name = "btnConvertRAWAudio";
+            this.btnConvertRAWAudio.Size = new System.Drawing.Size(267, 38);
+            this.btnConvertRAWAudio.TabIndex = 14;
+            this.btnConvertRAWAudio.Text = "Convert Raw Audio to WAV";
+            this.btnConvertRAWAudio.UseVisualStyleBackColor = true;
+            this.btnConvertRAWAudio.Click += new System.EventHandler(this.btnConvertRAWAudio_Click);
             // 
             // frmMain
             // 
@@ -377,7 +391,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button btnUnmangle;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button btnConvertAudio;
+        private System.Windows.Forms.Button btnConvertRAWAudio;
+        private System.Windows.Forms.Button btnConvertCheatAudio;
     }
 }
-
