@@ -12,7 +12,7 @@ Tools for decoding and viewing Fatal Racing/Whiplash game files:
 - [Implementation](https://gist.github.com/samunders-core/1acaadc064f203e4f2ab769c7dfabeda) of the unmangling algorithm by [@samunders-core](https://github.com/samunders-core)
 - [Decompilation](https://github.com/Zizin13/ROLLER/blob/b16cacf124f4ff2654fc3f8f77e7760780c49879/PROJECTS/ROLLER/sound.c) of `sound.c` by [@Zizin13](https://github.com/Zizin13)
 
-See the [Whiptools wiki](https://github.com/ninjatobob/Whiptools/wiki) for further information on file formats.
+See the [**Whiptools wiki**](https://github.com/ninjatobob/Whiptools/wiki) for further information on file formats.
 
 # YOU NEED MORE PRACTICE
 RACE OVER
