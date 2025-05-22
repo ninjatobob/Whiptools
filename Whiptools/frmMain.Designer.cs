@@ -52,7 +52,6 @@
             this.btnLoadImage = new System.Windows.Forms.Button();
             this.btnConvertImage = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.btnMangleFiles = new System.Windows.Forms.Button();
             this.btnUnmangle = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.btnConvertAudio = new System.Windows.Forms.Button();
@@ -288,7 +287,6 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.btnMangleFiles);
             this.groupBox3.Controls.Add(this.btnUnmangle);
             this.groupBox3.Location = new System.Drawing.Point(12, 12);
             this.groupBox3.Name = "groupBox3";
@@ -297,21 +295,11 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "File Mangling";
             // 
-            // btnMangleFiles
-            // 
-            this.btnMangleFiles.Location = new System.Drawing.Point(281, 19);
-            this.btnMangleFiles.Name = "btnMangleFiles";
-            this.btnMangleFiles.Size = new System.Drawing.Size(267, 38);
-            this.btnMangleFiles.TabIndex = 1;
-            this.btnMangleFiles.Text = "Mangle Files (beta)";
-            this.btnMangleFiles.UseVisualStyleBackColor = true;
-            this.btnMangleFiles.Click += new System.EventHandler(this.btnMangleFiles_Click);
-            // 
             // btnUnmangle
             // 
             this.btnUnmangle.Location = new System.Drawing.Point(6, 19);
             this.btnUnmangle.Name = "btnUnmangle";
-            this.btnUnmangle.Size = new System.Drawing.Size(269, 38);
+            this.btnUnmangle.Size = new System.Drawing.Size(542, 38);
             this.btnUnmangle.TabIndex = 0;
             this.btnUnmangle.Text = "Unmangle Files";
             this.btnUnmangle.UseVisualStyleBackColor = true;
@@ -387,7 +375,6 @@
         private System.Windows.Forms.Button btnSavePalette;
         private System.Windows.Forms.Button btnAddToPalette;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button btnMangleFiles;
         private System.Windows.Forms.Button btnUnmangle;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button btnConvertAudio;

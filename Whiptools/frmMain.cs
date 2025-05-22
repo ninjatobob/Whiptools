@@ -20,7 +20,6 @@ namespace Whiptools
         private string newBitmapName;
 
         public const string unmangledSuffix = "_unmangled";
-        public const string mangledSuffix = "_mangled";
 
         public frmMain()
         {
@@ -32,47 +31,31 @@ namespace Whiptools
             // RUBBISH RACER
         }
 
-    // file mangling
+    // file unmangling
 
         private void btnUnmangleFiles_Click(object sender, EventArgs e)
-        {
-            FileMangling(true);
-        }
-
-        private void btnMangleFiles_Click(object sender, EventArgs e)
-        {
-            FileMangling(false);
-        }
-
-        private void FileMangling(bool unmangle)
         {
             try
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = (unmangle ? "Mangled" : "Unmangled") +
-                    " Files (*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK)|*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select " + (unmangle ? "Mangled" : "Unmangled") + " Files";
+                openFileDialog.Filter = "Mangled Files (*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK)|" +
+                    "*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK|All Files (*.*)|*.*";
+                openFileDialog.Title = "Select Mangled Files";
                 openFileDialog.Multiselect = true;
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-                    folderBrowserDialog.Description = "Save " + (unmangle ? "un" : "") + "mangled files in:";
+                    folderBrowserDialog.Description = "Save unmangled files in:";
                     if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                     {
                         string outputfile = "";
                         foreach (String filename in openFileDialog.FileNames)
                         {
                             byte[] inputData = File.ReadAllBytes(filename);
-                            outputfile = folderBrowserDialog.SelectedPath + "\\" + Path.GetFileNameWithoutExtension(filename) +
-                                (unmangle ? unmangledSuffix : mangledSuffix) + Path.GetExtension(filename);
-                            if (unmangle)
-                            {
-                                File.WriteAllBytes(outputfile, clsUnmangler.Unmangle(inputData));
-                            }
-                            else
-                            {
-                                File.WriteAllBytes(outputfile, clsUnmangler.Mangle(inputData));
-                            }
+                            outputfile = folderBrowserDialog.SelectedPath + "\\" +
+                                Path.GetFileNameWithoutExtension(filename) + unmangledSuffix +
+                                Path.GetExtension(filename);
+                            File.WriteAllBytes(outputfile, clsUnmangler.Unmangle(inputData));
                         }
                         string msg = "";
                         if (openFileDialog.FileNames.Length == 1)
@@ -81,8 +64,8 @@ namespace Whiptools
                         }
                         else
                         {
-                            msg = "Saved " + openFileDialog.FileNames.Length + " " + (unmangle ? "un" : "") +
-                                "mangled files in " + folderBrowserDialog.SelectedPath;
+                            msg = "Saved " + openFileDialog.FileNames.Length + " unmangled files in " +
+                                folderBrowserDialog.SelectedPath;
                         }
                         MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
