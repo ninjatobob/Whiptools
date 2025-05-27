@@ -20,6 +20,7 @@ namespace Whiptools
         private string newBitmapName;
 
         public const string unmangledSuffix = "_unmangled";
+        public const string decodedSuffix = "_decoded";
 
         public frmMain()
         {
@@ -38,8 +39,8 @@ namespace Whiptools
             try
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Mangled Files (*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK)|" +
-                    "*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.TRK|All Files (*.*)|*.*";
+                openFileDialog.Filter = "Mangled Files (*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.RFR;*.RGE;*.TRK)|" +
+                    "*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.RFR;*.RGE;*.TRK|All Files (*.*)|*.*";
                 openFileDialog.Title = "Select Mangled Files";
                 openFileDialog.Multiselect = true;
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -353,27 +354,11 @@ namespace Whiptools
 
         private void btnConvertRAWAudio_Click(object sender, EventArgs e)
         {
-            ConvertAudio(false);
-        }
-
-        private void btnConvertCheatAudio_Click(object sender, EventArgs e)
-        {
-            ConvertAudio(true);
-        }
-
-        private void btnDecodeCheatAudio_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ConvertAudio(bool cheatMode)
-        {
             try
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Whiplash " +
-                    (cheatMode ? "Cheat Audio (*.KC)|*.KC" : "Raw Audio (*.RAW)|*.RAW") + "|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select " + (cheatMode ? "Cheat" : "Raw") + " Audio Files";
+                openFileDialog.Filter = "Whiplash Raw Audio (*.RAW;*.RFR;*.RGE)|*.RAW;*.RFR;*.RGE|All Files (*.*)|*.*";
+                openFileDialog.Title = "Select Raw Audio Files";
                 openFileDialog.Multiselect = true;
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -385,10 +370,9 @@ namespace Whiptools
                         foreach (String filename in openFileDialog.FileNames)
                         {
                             byte[] rawData = File.ReadAllBytes(filename);
-                            byte[] wavData = clsAudioConverter.RawToWav(cheatMode ? clsUnmangler.FibDecode(rawData, 115, 150) : rawData);
+                            byte[] wavData = clsAudioConverter.RawToWav(rawData);
                             outputfile = folderBrowserDialog.SelectedPath + "\\" +
                                 Path.GetFileName(filename) + ".WAV";
-                            outputfile = outputfile.Replace(unmangledSuffix, "");
                             File.WriteAllBytes(outputfile, wavData);
                         }
                         string msg = "";
@@ -409,6 +393,54 @@ namespace Whiptools
             {
                 MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnDecodeCheatAudio_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Whiplash Cheat Audio (*.KC)|*.KC|All Files (*.*)|*.*";
+                openFileDialog.Title = "Select Cheat Audio Files";
+                openFileDialog.Multiselect = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                    folderBrowserDialog.Description = "Save RAW files in:";
+                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string outputfile = "";
+                        foreach (String filename in openFileDialog.FileNames)
+                        {
+                            byte[] rawData = File.ReadAllBytes(filename);
+                            byte[] wavData = clsUnmangler.FibDecode(rawData, 115, 150);
+                            outputfile = folderBrowserDialog.SelectedPath + "\\" +
+                                Path.GetFileName(filename) + ".RAW";
+                            File.WriteAllBytes(outputfile, wavData);
+                        }
+                        string msg = "";
+                        if (openFileDialog.FileNames.Length == 1)
+                        {
+                            msg = "Saved " + outputfile;
+                        }
+                        else
+                        {
+                            msg = "Saved " + openFileDialog.FileNames.Length + " RAW files in " +
+                                folderBrowserDialog.SelectedPath;
+                        }
+                        MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnDecodePasswordIni_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

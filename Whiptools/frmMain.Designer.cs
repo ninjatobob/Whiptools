@@ -58,7 +58,7 @@ namespace Whiptools
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.btnConvertRAWAudio = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnDecodePasswordIni = new System.Windows.Forms.Button();
             this.btnDecodeFatalIni = new System.Windows.Forms.Button();
             this.btnDecodeCheatAudio = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
@@ -330,10 +330,11 @@ namespace Whiptools
             this.btnConvertRAWAudio.TabIndex = 0;
             this.btnConvertRAWAudio.Text = "Convert Raw Audio to WAV";
             this.btnConvertRAWAudio.UseVisualStyleBackColor = true;
+            this.btnConvertRAWAudio.Click += new System.EventHandler(this.btnConvertRAWAudio_Click);
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.button1);
+            this.groupBox4.Controls.Add(this.btnDecodePasswordIni);
             this.groupBox4.Controls.Add(this.btnDecodeFatalIni);
             this.groupBox4.Controls.Add(this.btnDecodeCheatAudio);
             this.groupBox4.Location = new System.Drawing.Point(13, 85);
@@ -343,14 +344,15 @@ namespace Whiptools
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "File Decoding";
             // 
-            // button1
+            // btnDecodePasswordIni
             // 
-            this.button1.Location = new System.Drawing.Point(372, 19);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(175, 38);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Decode PASSWORD.INI";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnDecodePasswordIni.Location = new System.Drawing.Point(372, 19);
+            this.btnDecodePasswordIni.Name = "btnDecodePasswordIni";
+            this.btnDecodePasswordIni.Size = new System.Drawing.Size(175, 38);
+            this.btnDecodePasswordIni.TabIndex = 2;
+            this.btnDecodePasswordIni.Text = "Decode PASSWORD.INI";
+            this.btnDecodePasswordIni.UseVisualStyleBackColor = true;
+            this.btnDecodePasswordIni.Click += new System.EventHandler(this.btnDecodePasswordIni_Click);
             // 
             // btnDecodeFatalIni
             // 
@@ -427,7 +429,7 @@ namespace Whiptools
         private GroupBox groupBox5;
         private Button btnConvertRAWAudio;
         private GroupBox groupBox4;
-        private Button button1;
+        private Button btnDecodePasswordIni;
         private Button btnDecodeFatalIni;
         private Button btnDecodeCheatAudio;
     }
