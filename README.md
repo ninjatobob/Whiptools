@@ -1,12 +1,13 @@
 # Whiptools
 Tools for decoding and viewing Fatal Racing/Whiplash game files:
 
-- Unmangler for .BM, .DRH, .HMD, .KC, .RAW, and .TRK files
+- Unmangler for .BM, .DRH, .HMD, .KC, .RAW, .RFR, .RGE and .TRK files
+- Decoding of cheat audio from .KC to .RAW format
+- Decoding of FATAL.INI and PASSWORD.INI files
+- Conversion of audio from .RAW/.RFR/.RGE to .WAV format
 - Bitmap generation from texture (.BM, .DRH) and palette (.PAL) files
 - Palette file extraction and export to image
 - Conversion of images to .BM/.DRH format
-- Conversion of audio from .RAW to .WAV format
-- Decoding of cheat audio from .KC to .WAV format
 
 ### Resources
 - [Implementation of the unmangling algorithm](https://gist.github.com/samunders-core/1acaadc064f203e4f2ab769c7dfabeda) by [@samunders-core](https://github.com/samunders-core)
