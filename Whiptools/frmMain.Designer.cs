@@ -83,7 +83,7 @@ namespace Whiptools
             this.groupBox1.Controls.Add(this.btnLoadPalette);
             this.groupBox1.Controls.Add(this.btnLoadBitmap);
             this.groupBox1.Controls.Add(this.btnViewBitmal);
-            this.groupBox1.Location = new System.Drawing.Point(12, 237);
+            this.groupBox1.Location = new System.Drawing.Point(12, 240);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(556, 192);
             this.groupBox1.TabIndex = 3;
@@ -92,7 +92,7 @@ namespace Whiptools
             // 
             // btnExportPalette
             // 
-            this.btnExportPalette.Location = new System.Drawing.Point(442, 95);
+            this.btnExportPalette.Location = new System.Drawing.Point(441, 95);
             this.btnExportPalette.Name = "btnExportPalette";
             this.btnExportPalette.Size = new System.Drawing.Size(105, 36);
             this.btnExportPalette.TabIndex = 5;
@@ -202,7 +202,7 @@ namespace Whiptools
             // 
             this.btnViewBitmal.Location = new System.Drawing.Point(9, 146);
             this.btnViewBitmal.Name = "btnViewBitmal";
-            this.btnViewBitmal.Size = new System.Drawing.Size(538, 34);
+            this.btnViewBitmal.Size = new System.Drawing.Size(537, 36);
             this.btnViewBitmal.TabIndex = 6;
             this.btnViewBitmal.Text = "View Image";
             this.btnViewBitmal.UseVisualStyleBackColor = true;
@@ -219,16 +219,16 @@ namespace Whiptools
             this.groupBox2.Controls.Add(this.btnConvertImage);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.groupBox2.Location = new System.Drawing.Point(12, 435);
+            this.groupBox2.Location = new System.Drawing.Point(12, 438);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(556, 157);
+            this.groupBox2.Size = new System.Drawing.Size(556, 156);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Bitmap Creator";
             // 
             // btnAddToPalette
             // 
-            this.btnAddToPalette.Location = new System.Drawing.Point(442, 59);
+            this.btnAddToPalette.Location = new System.Drawing.Point(440, 59);
             this.btnAddToPalette.Name = "btnAddToPalette";
             this.btnAddToPalette.Size = new System.Drawing.Size(106, 36);
             this.btnAddToPalette.TabIndex = 3;
@@ -286,7 +286,7 @@ namespace Whiptools
             // 
             this.btnConvertImage.Location = new System.Drawing.Point(10, 110);
             this.btnConvertImage.Name = "btnConvertImage";
-            this.btnConvertImage.Size = new System.Drawing.Size(538, 34);
+            this.btnConvertImage.Size = new System.Drawing.Size(536, 36);
             this.btnConvertImage.TabIndex = 4;
             this.btnConvertImage.Text = "Convert Image to Bitmap";
             this.btnConvertImage.UseVisualStyleBackColor = true;
@@ -297,7 +297,7 @@ namespace Whiptools
             this.groupBox3.Controls.Add(this.btnUnmangle);
             this.groupBox3.Location = new System.Drawing.Point(12, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(557, 67);
+            this.groupBox3.Size = new System.Drawing.Size(557, 70);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "File Mangling";
@@ -306,7 +306,7 @@ namespace Whiptools
             // 
             this.btnUnmangle.Location = new System.Drawing.Point(10, 19);
             this.btnUnmangle.Name = "btnUnmangle";
-            this.btnUnmangle.Size = new System.Drawing.Size(538, 38);
+            this.btnUnmangle.Size = new System.Drawing.Size(536, 36);
             this.btnUnmangle.TabIndex = 0;
             this.btnUnmangle.Text = "Unmangle Files";
             this.btnUnmangle.UseVisualStyleBackColor = true;
@@ -315,7 +315,7 @@ namespace Whiptools
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.btnConvertRAWAudio);
-            this.groupBox5.Location = new System.Drawing.Point(13, 161);
+            this.groupBox5.Location = new System.Drawing.Point(12, 164);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(556, 70);
             this.groupBox5.TabIndex = 2;
@@ -326,7 +326,7 @@ namespace Whiptools
             // 
             this.btnConvertRAWAudio.Location = new System.Drawing.Point(10, 19);
             this.btnConvertRAWAudio.Name = "btnConvertRAWAudio";
-            this.btnConvertRAWAudio.Size = new System.Drawing.Size(538, 38);
+            this.btnConvertRAWAudio.Size = new System.Drawing.Size(536, 36);
             this.btnConvertRAWAudio.TabIndex = 0;
             this.btnConvertRAWAudio.Text = "Convert Raw Audio to WAV";
             this.btnConvertRAWAudio.UseVisualStyleBackColor = true;
@@ -337,9 +337,9 @@ namespace Whiptools
             this.groupBox4.Controls.Add(this.btnDecodePasswordIni);
             this.groupBox4.Controls.Add(this.btnDecodeFatalIni);
             this.groupBox4.Controls.Add(this.btnDecodeCheatAudio);
-            this.groupBox4.Location = new System.Drawing.Point(13, 85);
+            this.groupBox4.Location = new System.Drawing.Point(12, 88);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(555, 70);
+            this.groupBox4.Size = new System.Drawing.Size(557, 70);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "File Decoding";
@@ -348,7 +348,7 @@ namespace Whiptools
             // 
             this.btnDecodePasswordIni.Location = new System.Drawing.Point(372, 19);
             this.btnDecodePasswordIni.Name = "btnDecodePasswordIni";
-            this.btnDecodePasswordIni.Size = new System.Drawing.Size(175, 38);
+            this.btnDecodePasswordIni.Size = new System.Drawing.Size(174, 36);
             this.btnDecodePasswordIni.TabIndex = 2;
             this.btnDecodePasswordIni.Text = "Decode PASSWORD.INI";
             this.btnDecodePasswordIni.UseVisualStyleBackColor = true;
@@ -358,7 +358,7 @@ namespace Whiptools
             // 
             this.btnDecodeFatalIni.Location = new System.Drawing.Point(191, 19);
             this.btnDecodeFatalIni.Name = "btnDecodeFatalIni";
-            this.btnDecodeFatalIni.Size = new System.Drawing.Size(175, 38);
+            this.btnDecodeFatalIni.Size = new System.Drawing.Size(173, 36);
             this.btnDecodeFatalIni.TabIndex = 1;
             this.btnDecodeFatalIni.Text = "Decode FATAL.INI";
             this.btnDecodeFatalIni.UseVisualStyleBackColor = true;
@@ -368,7 +368,7 @@ namespace Whiptools
             // 
             this.btnDecodeCheatAudio.Location = new System.Drawing.Point(9, 19);
             this.btnDecodeCheatAudio.Name = "btnDecodeCheatAudio";
-            this.btnDecodeCheatAudio.Size = new System.Drawing.Size(175, 38);
+            this.btnDecodeCheatAudio.Size = new System.Drawing.Size(174, 36);
             this.btnDecodeCheatAudio.TabIndex = 0;
             this.btnDecodeCheatAudio.Text = "Decode Cheat Audio";
             this.btnDecodeCheatAudio.UseVisualStyleBackColor = true;
@@ -378,7 +378,7 @@ namespace Whiptools
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(581, 603);
+            this.ClientSize = new System.Drawing.Size(580, 606);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox3);
