@@ -83,10 +83,10 @@ namespace Whiptools
             this.groupBox1.Controls.Add(this.btnLoadPalette);
             this.groupBox1.Controls.Add(this.btnLoadBitmap);
             this.groupBox1.Controls.Add(this.btnViewBitmal);
-            this.groupBox1.Location = new System.Drawing.Point(12, 161);
+            this.groupBox1.Location = new System.Drawing.Point(12, 237);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(556, 192);
-            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Bitmap Viewer";
             // 
@@ -219,10 +219,10 @@ namespace Whiptools
             this.groupBox2.Controls.Add(this.btnConvertImage);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.groupBox2.Location = new System.Drawing.Point(12, 359);
+            this.groupBox2.Location = new System.Drawing.Point(12, 435);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(556, 157);
-            this.groupBox2.TabIndex = 3;
+            this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Bitmap Creator";
             // 
@@ -315,10 +315,10 @@ namespace Whiptools
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.btnConvertRAWAudio);
-            this.groupBox5.Location = new System.Drawing.Point(12, 522);
+            this.groupBox5.Location = new System.Drawing.Point(13, 161);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(556, 70);
-            this.groupBox5.TabIndex = 4;
+            this.groupBox5.TabIndex = 2;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Audio Tools";
             // 
