@@ -362,6 +362,7 @@ namespace Whiptools
             this.btnDecodeFatalIni.TabIndex = 1;
             this.btnDecodeFatalIni.Text = "Decode FATAL.INI";
             this.btnDecodeFatalIni.UseVisualStyleBackColor = true;
+            this.btnDecodeFatalIni.Click += new System.EventHandler(this.btnDecodeFatalIni_Click);
             // 
             // btnDecodeCheatAudio
             // 

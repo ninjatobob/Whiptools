@@ -413,10 +413,10 @@ namespace Whiptools
                         foreach (String filename in openFileDialog.FileNames)
                         {
                             byte[] rawData = File.ReadAllBytes(filename);
-                            byte[] wavData = clsUnmangler.FibDecode(rawData, 115, 150);
+                            byte[] decodedData = clsUnmangler.FibDecode(rawData, 115, 150);
                             outputfile = folderBrowserDialog.SelectedPath + "\\" +
                                 Path.GetFileName(filename) + ".RAW";
-                            File.WriteAllBytes(outputfile, wavData);
+                            File.WriteAllBytes(outputfile, decodedData);
                         }
                         string msg = "";
                         if (openFileDialog.FileNames.Length == 1)
@@ -438,9 +438,49 @@ namespace Whiptools
             }
         }
 
+        private void btnDecodeFatalIni_Click(object sender, EventArgs e)
+        {
+            DecodeIniFile("FATAL.INI", 77, 101);
+        }
+
         private void btnDecodePasswordIni_Click(object sender, EventArgs e)
         {
+            DecodeIniFile("PASSWORD.INI", 23, 37);
+        }
 
+        private void DecodeIniFile(string IniFilename, int a0, int a1)
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Whiplash INI Files (*.INI)|*.INI|All Files (*.*)|*.*";
+                openFileDialog.Title = "Select " + IniFilename + " File";
+                openFileDialog.Multiselect = false;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                    folderBrowserDialog.Description = "Save INI file in:";
+                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string outputfile = "";
+                        foreach (String filename in openFileDialog.FileNames)
+                        {
+                            byte[] rawData = File.ReadAllBytes(filename);
+                            byte[] decodedData = clsUnmangler.FibDecode(rawData, a0, a1);
+                            outputfile = folderBrowserDialog.SelectedPath + "\\" +
+                                Path.GetFileNameWithoutExtension(filename) +
+                                decodedSuffix + Path.GetExtension(filename);
+                            File.WriteAllBytes(outputfile, decodedData);
+                        }
+                        MessageBox.Show("Saved " + outputfile, "RACE OVER",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
