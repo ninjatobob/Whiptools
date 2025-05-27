@@ -361,6 +361,11 @@ namespace Whiptools
             ConvertAudio(true);
         }
 
+        private void btnDecodeCheatAudio_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void ConvertAudio(bool cheatMode)
         {
             try
@@ -380,7 +385,7 @@ namespace Whiptools
                         foreach (String filename in openFileDialog.FileNames)
                         {
                             byte[] rawData = File.ReadAllBytes(filename);
-                            byte[] wavData = clsAudioConverter.RawToWav(cheatMode ? clsUnmangler.DecodeKC(rawData) : rawData);
+                            byte[] wavData = clsAudioConverter.RawToWav(cheatMode ? clsUnmangler.FibDecode(rawData, 115, 150) : rawData);
                             outputfile = folderBrowserDialog.SelectedPath + "\\" +
                                 Path.GetFileName(filename) + ".WAV";
                             outputfile = outputfile.Replace(unmangledSuffix, "");

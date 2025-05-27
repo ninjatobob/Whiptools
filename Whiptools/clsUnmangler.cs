@@ -104,20 +104,17 @@ namespace Whiptools
             return outputData;
         }
 
-        public static byte[] DecodeKC(byte[] inputData)
+        public static byte[] FibDecode(byte[] inputData, int a0, int a1)
         {
             int length = inputData.Length;
             byte[] outputData = new byte[length];
 
-            int a = 0x96; // super secret numbers
-            int b = 0x73;
-
             for (int i = 0; i < length; i++)
             {
-                int c = (a + b) & 0xFF;
-                outputData[i] = (byte)(inputData[i] ^ c);
-                b = a;
-                a = c;
+                int a2 = (a0 + a1) & 0xFF;
+                outputData[i] = (byte)(inputData[i] ^ a2);
+                a0 = a1;
+                a1 = a2;
             }
             return outputData;
         }
