@@ -300,7 +300,7 @@ namespace Whiptools
             this.groupBox3.Size = new System.Drawing.Size(557, 70);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "File Mangling";
+            this.groupBox3.Text = "File Unmangling";
             // 
             // btnUnmangle
             // 

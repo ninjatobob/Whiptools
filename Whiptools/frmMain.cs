@@ -32,7 +32,7 @@ namespace Whiptools
             // RUBBISH RACER
         }
 
-    // file unmangling
+        // file unmangling
 
         private void btnUnmangleFiles_Click(object sender, EventArgs e)
         {
@@ -78,7 +78,142 @@ namespace Whiptools
             }
         }
 
-    // bitmap viewer
+        // file decoding
+
+        private void btnDecodeCheatAudio_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Whiplash Cheat Audio (*.KC)|*.KC|All Files (*.*)|*.*";
+                openFileDialog.Title = "Select Cheat Audio Files";
+                openFileDialog.Multiselect = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                    folderBrowserDialog.Description = "Save RAW files in:";
+                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string outputfile = "";
+                        foreach (String filename in openFileDialog.FileNames)
+                        {
+                            byte[] rawData = File.ReadAllBytes(filename);
+                            byte[] decodedData = clsUnmangler.FibDecode(rawData, 115, 150);
+                            outputfile = folderBrowserDialog.SelectedPath + "\\" +
+                                Path.GetFileName(filename) + ".RAW";
+                            File.WriteAllBytes(outputfile, decodedData);
+                        }
+                        string msg = "";
+                        if (openFileDialog.FileNames.Length == 1)
+                        {
+                            msg = "Saved " + outputfile;
+                        }
+                        else
+                        {
+                            msg = "Saved " + openFileDialog.FileNames.Length + " RAW files in " +
+                                folderBrowserDialog.SelectedPath;
+                        }
+                        MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnDecodeFatalIni_Click(object sender, EventArgs e)
+        {
+            DecodeIniFile("FATAL.INI", 77, 101);
+        }
+
+        private void btnDecodePasswordIni_Click(object sender, EventArgs e)
+        {
+            DecodeIniFile("PASSWORD.INI", 23, 37);
+        }
+
+        private void DecodeIniFile(string IniFilename, int a0, int a1)
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Whiplash INI Files (*.INI)|*.INI|All Files (*.*)|*.*";
+                openFileDialog.Title = "Select " + IniFilename + " File";
+                openFileDialog.Multiselect = false;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                    folderBrowserDialog.Description = "Save INI file in:";
+                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string outputfile = "";
+                        foreach (String filename in openFileDialog.FileNames)
+                        {
+                            byte[] rawData = File.ReadAllBytes(filename);
+                            byte[] decodedData = clsUnmangler.FibDecode(rawData, a0, a1);
+                            outputfile = folderBrowserDialog.SelectedPath + "\\" +
+                                Path.GetFileNameWithoutExtension(filename) +
+                                decodedSuffix + Path.GetExtension(filename);
+                            File.WriteAllBytes(outputfile, decodedData);
+                        }
+                        MessageBox.Show("Saved " + outputfile, "RACE OVER",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // audio tools
+
+        private void btnConvertRAWAudio_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "Whiplash Raw Audio (*.RAW;*.RFR;*.RGE)|*.RAW;*.RFR;*.RGE|All Files (*.*)|*.*";
+                openFileDialog.Title = "Select Raw Audio Files";
+                openFileDialog.Multiselect = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                    folderBrowserDialog.Description = "Save WAV files in:";
+                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string outputfile = "";
+                        foreach (String filename in openFileDialog.FileNames)
+                        {
+                            byte[] rawData = File.ReadAllBytes(filename);
+                            byte[] wavData = clsAudioConverter.RawToWav(rawData);
+                            outputfile = folderBrowserDialog.SelectedPath + "\\" +
+                                Path.GetFileName(filename) + ".WAV";
+                            File.WriteAllBytes(outputfile, wavData);
+                        }
+                        string msg = "";
+                        if (openFileDialog.FileNames.Length == 1)
+                        {
+                            msg = "Saved " + outputfile;
+                        }
+                        else
+                        {
+                            msg = "Saved " + openFileDialog.FileNames.Length + " WAV files in " +
+                                folderBrowserDialog.SelectedPath;
+                        }
+                        MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    
+        // bitmap viewer
 
         private void btnLoadBitmap_Click(object sender, EventArgs e)
         {
@@ -225,7 +360,7 @@ namespace Whiptools
             }
         }
 
-    // bitmap creator
+        // bitmap creator
 
         private void btnLoadImage_Click(object sender, EventArgs e)
         {
@@ -341,139 +476,6 @@ namespace Whiptools
                         string savefile = saveFileDialog.FileName;
                         File.WriteAllBytes(savefile, clsBitmapper.GetBitmapArray(newBitmap, palette));
                         MessageBox.Show("Saved " + savefile, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-            }
-            catch
-            {
-                MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        // audio tools
-
-        private void btnConvertRAWAudio_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Whiplash Raw Audio (*.RAW;*.RFR;*.RGE)|*.RAW;*.RFR;*.RGE|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select Raw Audio Files";
-                openFileDialog.Multiselect = true;
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-                    folderBrowserDialog.Description = "Save WAV files in:";
-                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        string outputfile = "";
-                        foreach (String filename in openFileDialog.FileNames)
-                        {
-                            byte[] rawData = File.ReadAllBytes(filename);
-                            byte[] wavData = clsAudioConverter.RawToWav(rawData);
-                            outputfile = folderBrowserDialog.SelectedPath + "\\" +
-                                Path.GetFileName(filename) + ".WAV";
-                            File.WriteAllBytes(outputfile, wavData);
-                        }
-                        string msg = "";
-                        if (openFileDialog.FileNames.Length == 1)
-                        {
-                            msg = "Saved " + outputfile;
-                        }
-                        else
-                        {
-                            msg = "Saved " + openFileDialog.FileNames.Length + " WAV files in " +
-                                folderBrowserDialog.SelectedPath;
-                        }
-                        MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-            }
-            catch
-            {
-                MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void btnDecodeCheatAudio_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Whiplash Cheat Audio (*.KC)|*.KC|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select Cheat Audio Files";
-                openFileDialog.Multiselect = true;
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-                    folderBrowserDialog.Description = "Save RAW files in:";
-                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        string outputfile = "";
-                        foreach (String filename in openFileDialog.FileNames)
-                        {
-                            byte[] rawData = File.ReadAllBytes(filename);
-                            byte[] decodedData = clsUnmangler.FibDecode(rawData, 115, 150);
-                            outputfile = folderBrowserDialog.SelectedPath + "\\" +
-                                Path.GetFileName(filename) + ".RAW";
-                            File.WriteAllBytes(outputfile, decodedData);
-                        }
-                        string msg = "";
-                        if (openFileDialog.FileNames.Length == 1)
-                        {
-                            msg = "Saved " + outputfile;
-                        }
-                        else
-                        {
-                            msg = "Saved " + openFileDialog.FileNames.Length + " RAW files in " +
-                                folderBrowserDialog.SelectedPath;
-                        }
-                        MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-            }
-            catch
-            {
-                MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void btnDecodeFatalIni_Click(object sender, EventArgs e)
-        {
-            DecodeIniFile("FATAL.INI", 77, 101);
-        }
-
-        private void btnDecodePasswordIni_Click(object sender, EventArgs e)
-        {
-            DecodeIniFile("PASSWORD.INI", 23, 37);
-        }
-
-        private void DecodeIniFile(string IniFilename, int a0, int a1)
-        {
-            try
-            {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Whiplash INI Files (*.INI)|*.INI|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select " + IniFilename + " File";
-                openFileDialog.Multiselect = false;
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-                    folderBrowserDialog.Description = "Save INI file in:";
-                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        string outputfile = "";
-                        foreach (String filename in openFileDialog.FileNames)
-                        {
-                            byte[] rawData = File.ReadAllBytes(filename);
-                            byte[] decodedData = clsUnmangler.FibDecode(rawData, a0, a1);
-                            outputfile = folderBrowserDialog.SelectedPath + "\\" +
-                                Path.GetFileNameWithoutExtension(filename) +
-                                decodedSuffix + Path.GetExtension(filename);
-                            File.WriteAllBytes(outputfile, decodedData);
-                        }
-                        MessageBox.Show("Saved " + outputfile, "RACE OVER",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
