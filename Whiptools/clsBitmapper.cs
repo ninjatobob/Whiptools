@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Whiptools
 {
-    class clsBitmapper
+    class Bitmapper
     {
         public static byte[] CreateRGBArray(byte[] bitmapArray, Color[] palette)
         {

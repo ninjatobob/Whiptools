@@ -2,7 +2,7 @@
 
 namespace Whiptools
 {
-    class clsAudioConverter
+    class AudioConverter
     {
         static int sampleRate = 11025;
         static short bitDepth = 8;

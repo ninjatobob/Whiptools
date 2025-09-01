@@ -56,7 +56,7 @@ namespace Whiptools
                             outputfile = folderBrowserDialog.SelectedPath + "\\" +
                                 Path.GetFileNameWithoutExtension(filename) + unmangledSuffix +
                                 Path.GetExtension(filename);
-                            File.WriteAllBytes(outputfile, clsUnmangler.Unmangle(inputData));
+                            File.WriteAllBytes(outputfile, Unmangler.Unmangle(inputData));
                         }
                         string msg = "";
                         if (openFileDialog.FileNames.Length == 1)
@@ -98,7 +98,7 @@ namespace Whiptools
                         foreach (String filename in openFileDialog.FileNames)
                         {
                             byte[] rawData = File.ReadAllBytes(filename);
-                            byte[] decodedData = clsUnmangler.FibDecode(rawData, 115, 150);
+                            byte[] decodedData = FibCipher.Decode(rawData, 115, 150);
                             outputfile = folderBrowserDialog.SelectedPath + "\\" +
                                 Path.GetFileName(filename) + ".RAW";
                             File.WriteAllBytes(outputfile, decodedData);
@@ -151,7 +151,7 @@ namespace Whiptools
                         foreach (String filename in openFileDialog.FileNames)
                         {
                             byte[] rawData = File.ReadAllBytes(filename);
-                            byte[] decodedData = clsUnmangler.FibDecode(rawData, a0, a1);
+                            byte[] decodedData = FibCipher.Decode(rawData, a0, a1);
                             outputfile = folderBrowserDialog.SelectedPath + "\\" +
                                 Path.GetFileNameWithoutExtension(filename) +
                                 decodedSuffix + Path.GetExtension(filename);
@@ -188,7 +188,7 @@ namespace Whiptools
                         foreach (String filename in openFileDialog.FileNames)
                         {
                             byte[] rawData = File.ReadAllBytes(filename);
-                            byte[] wavData = clsAudioConverter.RawToWav(rawData);
+                            byte[] wavData = AudioConverter.RawToWav(rawData);
                             outputfile = folderBrowserDialog.SelectedPath + "\\" +
                                 Path.GetFileName(filename) + ".WAV";
                             File.WriteAllBytes(outputfile, wavData);
@@ -286,7 +286,7 @@ namespace Whiptools
                 {
                     string filename = openFileDialog.FileName;
 
-                    paletteData = clsBitmapper.ConvertByteToPalette(File.ReadAllBytes(filename));
+                    paletteData = Bitmapper.ConvertByteToPalette(File.ReadAllBytes(filename));
                     paletteName = Path.GetFileName(filename);
 
                     txtPalettePath.Text = Path.GetFullPath(filename);
@@ -310,7 +310,7 @@ namespace Whiptools
                 saveFileDialog.Title = "Export Palette";
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    Bitmap bitmap = clsBitmapper.ConvertPaletteToBitmap(paletteData);
+                    Bitmap bitmap = Bitmapper.ConvertPaletteToBitmap(paletteData);
                     string ext = Path.GetExtension(saveFileDialog.FileName);
                     switch (ext.ToLower())
                     {
@@ -339,13 +339,13 @@ namespace Whiptools
         {
             try
             {
-                byte[] rgbData = clsBitmapper.CreateRGBArray(bitmapData, paletteData);
+                byte[] rgbData = Bitmapper.CreateRGBArray(bitmapData, paletteData);
 
                 int bitmapWidth = Convert.ToInt32(double.Parse(txtDimWidth.Text));
                 int bitmapHeight = Convert.ToInt32(Math.Ceiling(bitmapData.Length / (double)bitmapWidth));
 
                 frmBitmap = new frmBitmap();
-                frmBitmap.pictureBox1.Image = clsBitmapper.CreateBitmapFromRGB(bitmapWidth, bitmapHeight, rgbData);
+                frmBitmap.pictureBox1.Image = Bitmapper.CreateBitmapFromRGB(bitmapWidth, bitmapHeight, rgbData);
                 frmBitmap.pictureBox1.Location = new Point(0, 0);
                 frmBitmap.pictureBox1.Size = new Size(bitmapWidth, bitmapHeight);
                 frmBitmap.Width = Math.Max(320, Math.Min(bitmapWidth, Convert.ToInt32(Screen.PrimaryScreen.Bounds.Width * 0.95))) + 16;
@@ -374,8 +374,8 @@ namespace Whiptools
                     newBitmapName = openFileDialog.FileName;
                     using (Bitmap bitmap = new Bitmap(newBitmapName))
                     {
-                        Bitmap tempBitmap = clsBitmapper.ConvertBitmapTo6Bit(bitmap);
-                        Color[] tempPalette = clsBitmapper.GetPaletteFromBitmap(tempBitmap);
+                        Bitmap tempBitmap = Bitmapper.ConvertBitmapTo6Bit(bitmap);
+                        Color[] tempPalette = Bitmapper.GetPaletteFromBitmap(tempBitmap);
                         if (tempPalette.Length > 256)
                         {
                             MessageBox.Show("Too many colours! (" + Convert.ToString(tempPalette.Length) + ")",
@@ -407,7 +407,7 @@ namespace Whiptools
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filename = saveFileDialog.FileName;
-                File.WriteAllBytes(filename, clsBitmapper.GetPaletteArray(palette));
+                File.WriteAllBytes(filename, Bitmapper.GetPaletteArray(palette));
                 MessageBox.Show("Saved " + filename, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -436,7 +436,7 @@ namespace Whiptools
                 {
                     string filename = openFileDialog.FileName;
 
-                    Color[] inputPalette = clsBitmapper.ConvertByteToPalette(File.ReadAllBytes(filename));
+                    Color[] inputPalette = Bitmapper.ConvertByteToPalette(File.ReadAllBytes(filename));
                     string userInput = Microsoft.VisualBasic.Interaction.InputBox("Add at position (0-255):", "Add to Palette", "0");
                     int offset = Convert.ToInt32(userInput);
 
@@ -472,9 +472,9 @@ namespace Whiptools
                     saveFileDialog.Title = "Save Bitmap As";
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
-                        Color[] palette = clsBitmapper.ConvertByteToPalette(File.ReadAllBytes(paletteFilename));
+                        Color[] palette = Bitmapper.ConvertByteToPalette(File.ReadAllBytes(paletteFilename));
                         string savefile = saveFileDialog.FileName;
-                        File.WriteAllBytes(savefile, clsBitmapper.GetBitmapArray(newBitmap, palette));
+                        File.WriteAllBytes(savefile, Bitmapper.GetBitmapArray(newBitmap, palette));
                         MessageBox.Show("Saved " + savefile, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.IO;
-using System.Diagnostics;
 
 namespace Whiptools
 {
-    class clsUnmangler
+    class Unmangler
     {
         public static byte[] Unmangle(byte[] inputData)
         {
@@ -103,8 +101,10 @@ namespace Whiptools
             }
             return outputData;
         }
-
-        public static byte[] FibDecode(byte[] inputData, int a0, int a1)
+    }
+    class FibCipher
+    {
+        public static byte[] Decode(byte[] inputData, int a0, int a1)
         {
             int length = inputData.Length;
             byte[] outputData = new byte[length];
