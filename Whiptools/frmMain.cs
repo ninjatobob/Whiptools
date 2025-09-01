@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Whiptools
@@ -57,14 +58,14 @@ namespace Whiptools
                     if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                     {
                         string outputfile = "";
-                        foreach (String filename in openFileDialog.FileNames)
+                        Parallel.ForEach(openFileDialog.FileNames, filename =>
                         {
                             byte[] inputData = File.ReadAllBytes(filename);
                             byte[] outputData = unmangle ? Unmangler.Unmangle(inputData) : Mangler.Mangle(inputData);
                             outputfile = folderBrowserDialog.SelectedPath + "\\" + Path.GetFileNameWithoutExtension(filename) +
                                 "_" + MangleType(unmangle).ToLower() + "d" + Path.GetExtension(filename);
                             File.WriteAllBytes(outputfile, outputData);
-                        }
+                        });
                         string msg = "";
                         if (openFileDialog.FileNames.Length == 1)
                         {
