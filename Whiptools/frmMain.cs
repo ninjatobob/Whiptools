@@ -47,8 +47,8 @@ namespace Whiptools
             try
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = MangleType(!unmangle) + "d Files (*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RFR;*.RGE;*.TRK)|" +
-                    "*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RFR;*.RGE;*.TRK|All Files (*.*)|*.*";
+                openFileDialog.Filter = MangleType(!unmangle) + "d Files (*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.RFR;*.RGE;*.TRK)|" +
+                    "*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.RFR;*.RGE;*.TRK|All Files (*.*)|*.*";
                 openFileDialog.Title = "Select " + MangleType(!unmangle) + "d Files";
                 openFileDialog.Multiselect = true;
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
