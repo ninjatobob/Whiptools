@@ -61,6 +61,7 @@ namespace Whiptools
             this.btnDecodePasswordIni = new System.Windows.Forms.Button();
             this.btnDecodeFatalIni = new System.Windows.Forms.Button();
             this.btnDecodeCheatAudio = new System.Windows.Forms.Button();
+            this.btnMangle = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -294,6 +295,7 @@ namespace Whiptools
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.btnMangle);
             this.groupBox3.Controls.Add(this.btnUnmangle);
             this.groupBox3.Location = new System.Drawing.Point(12, 12);
             this.groupBox3.Name = "groupBox3";
@@ -306,7 +308,7 @@ namespace Whiptools
             // 
             this.btnUnmangle.Location = new System.Drawing.Point(10, 19);
             this.btnUnmangle.Name = "btnUnmangle";
-            this.btnUnmangle.Size = new System.Drawing.Size(536, 36);
+            this.btnUnmangle.Size = new System.Drawing.Size(264, 36);
             this.btnUnmangle.TabIndex = 0;
             this.btnUnmangle.Text = "Unmangle Files";
             this.btnUnmangle.UseVisualStyleBackColor = true;
@@ -374,6 +376,16 @@ namespace Whiptools
             this.btnDecodeCheatAudio.UseVisualStyleBackColor = true;
             this.btnDecodeCheatAudio.Click += new System.EventHandler(this.btnDecodeCheatAudio_Click);
             // 
+            // btnMangle
+            // 
+            this.btnMangle.Location = new System.Drawing.Point(282, 19);
+            this.btnMangle.Name = "btnMangle";
+            this.btnMangle.Size = new System.Drawing.Size(264, 36);
+            this.btnMangle.TabIndex = 1;
+            this.btnMangle.Text = "Mangle Files";
+            this.btnMangle.UseVisualStyleBackColor = true;
+            this.btnMangle.Click += new System.EventHandler(this.btnMangleFiles_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -433,5 +445,6 @@ namespace Whiptools
         private Button btnDecodePasswordIni;
         private Button btnDecodeFatalIni;
         private Button btnDecodeCheatAudio;
+        private Button btnMangle;
     }
 }

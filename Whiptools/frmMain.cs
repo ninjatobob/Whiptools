@@ -19,10 +19,6 @@ namespace Whiptools
         private Color[] newPalette;
         private string newBitmapName;
 
-        public const string unmangledSuffix = "_unmangled";
-        public const string mangledSuffix = "_mangled";
-        public const string decodedSuffix = "_decoded";
-
         public frmMain()
         {
             InitializeComponent();
@@ -40,20 +36,24 @@ namespace Whiptools
             FileMangling(true);
         }
 
+        private void btnMangleFiles_Click(object sender, EventArgs e)
+        {
+            FileMangling(false);
+        }
+
         private void FileMangling(bool unmangle)
         {
             try
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = (unmangle ? "Unmangled" : "Mangled") +
-                    " Files (*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.RFR;*.RGE;*.TRK)|" +
+                openFileDialog.Filter = MangleType(!unmangle) + "d Files (*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.RFR;*.RGE;*.TRK)|" +
                     "*.BM;*.DRH;*.HMD;*.KC;*.RAW;*.RFR;*.RGE;*.TRK|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select Mangled Files";
+                openFileDialog.Title = "Select " + MangleType(!unmangle) + "d Files";
                 openFileDialog.Multiselect = true;
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-                    folderBrowserDialog.Description = "Save " + (unmangle ? "unmangled" : "mangled") + " files in:";
+                    folderBrowserDialog.Description = "Save " + MangleType(unmangle).ToLower() + "d files in:";
                     if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                     {
                         string outputfile = "";
@@ -61,9 +61,8 @@ namespace Whiptools
                         {
                             byte[] inputData = File.ReadAllBytes(filename);
                             byte[] outputData = unmangle ? Unmangler.Unmangle(inputData) : Mangler.Mangle(inputData);
-                            outputfile = folderBrowserDialog.SelectedPath + "\\" +
-                                Path.GetFileNameWithoutExtension(filename) + (unmangle ? unmangledSuffix : mangledSuffix) +
-                                Path.GetExtension(filename);
+                            outputfile = folderBrowserDialog.SelectedPath + "\\" + Path.GetFileNameWithoutExtension(filename) +
+                                "_" + MangleType(unmangle).ToLower() + "d" + Path.GetExtension(filename);
                             File.WriteAllBytes(outputfile, outputData);
                         }
                         string msg = "";
@@ -73,8 +72,8 @@ namespace Whiptools
                         }
                         else
                         {
-                            msg = "Saved " + openFileDialog.FileNames.Length + " " + (unmangle ? "unmangled" : "mangled")
-                                + " files in " + folderBrowserDialog.SelectedPath;
+                            msg = "Saved " + openFileDialog.FileNames.Length + " " + MangleType(unmangle).ToLower() +
+                                "d files in " + folderBrowserDialog.SelectedPath;
                         }
                         MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -84,6 +83,11 @@ namespace Whiptools
             {
                 MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        public static string MangleType(bool unmangle)
+        {
+            return unmangle ? "Unmangle" : "Mangle";
         }
 
         // file decoding
@@ -162,7 +166,7 @@ namespace Whiptools
                             byte[] decodedData = FibCipher.Decode(rawData, a0, a1);
                             outputfile = folderBrowserDialog.SelectedPath + "\\" +
                                 Path.GetFileNameWithoutExtension(filename) +
-                                decodedSuffix + Path.GetExtension(filename);
+                                "_decoded" + Path.GetExtension(filename);
                             File.WriteAllBytes(outputfile, decodedData);
                         }
                         MessageBox.Show("Saved " + outputfile, "RACE OVER",
@@ -314,7 +318,7 @@ namespace Whiptools
                 string filename = Path.GetFileNameWithoutExtension(paletteName) + "_palette";
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "Portable Network Graphics (*.png)|*.png|Windows Bitmap (*.bmp)|*.bmp|All Files (*.*)|*.*";
-                saveFileDialog.FileName = filename.Replace(frmMain.unmangledSuffix, "");
+                saveFileDialog.FileName = filename.Replace("_unmangled", "");
                 saveFileDialog.Title = "Export Palette";
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
