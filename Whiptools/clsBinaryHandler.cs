@@ -102,6 +102,16 @@ namespace Whiptools
             return outputData;
         }
     }
+    class Mangler
+    {
+        public static byte[] Mangle(byte[] inputData) // to implement
+        {
+            int length = inputData.Length;
+            byte[] outputData = new byte[length];
+            return outputData;
+        }
+    }
+
     class FibCipher
     {
         public static byte[] Decode(byte[] inputData, int a0, int a1)
