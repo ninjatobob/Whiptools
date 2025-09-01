@@ -58,6 +58,7 @@ namespace Whiptools
                     if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                     {
                         string outputfile = "";
+                        // foreach (string filename in openFileDialog.FileNames)
                         Parallel.ForEach(openFileDialog.FileNames, filename =>
                         {
                             byte[] inputData = File.ReadAllBytes(filename);
