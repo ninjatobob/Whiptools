@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.CompilerServices;
 
 namespace Whiptools
 {
@@ -16,94 +14,90 @@ namespace Whiptools
             int inputPos = 4;
             int outputPos = 0;
 
-            using (StreamWriter writer = new StreamWriter("c:\\desktop\\test.txt", false))
+            while ((inputPos < inputData.Length) && (outputPos < outputLength))
             {
-                while ((inputPos < inputData.Length) && (outputPos < outputLength))
-                {
-                    int byteValue = Convert.ToInt32(inputData[inputPos]);
-                    writer.WriteLine(byteValue);
+                int byteValue = Convert.ToInt32(inputData[inputPos]);
 
-                    if (byteValue <= 0x3F) // 0x00 to 0x3F: read bytes from input
+                if (byteValue <= 0x3F) // 0x00 to 0x3F: read bytes from input
+                {
+                    byte[] tempArray = new byte[byteValue];
+                    Array.Copy(inputData, inputPos + 1, tempArray, 0, byteValue);
+                    Array.Copy(tempArray, 0, outputData, outputPos, byteValue);
+                    inputPos += byteValue + 1;
+                    outputPos += byteValue;
+                }
+                else if (byteValue <= 0x4F) // 0x40 to 0x4F: generate ascending bytes based on last 2 bytes
+                {
+                    int delta = outputData[outputPos - 1] - outputData[outputPos - 2];
+                    for (int i = 0; i < ((byteValue & 0x0F) + 3); i++)
                     {
-                        byte[] tempArray = new byte[byteValue];
-                        Array.Copy(inputData, inputPos + 1, tempArray, 0, byteValue);
-                        Array.Copy(tempArray, 0, outputData, outputPos, byteValue);
-                        inputPos += byteValue + 1;
-                        outputPos += byteValue;
+                        outputData[outputPos] = (byte)((outputData[outputPos - 1] + delta) & 0xFF);
+                        outputPos++;
                     }
-                    else if (byteValue <= 0x4F) // 0x40 to 0x4F: generate ascending bytes based on last 2 bytes
+                    inputPos++;
+                }
+                else if (byteValue <= 0x5F) // 0x50 to 0x5F: generate ascending words based on last 2 words
+                {
+                    short delta = (short)(BitConverter.ToInt16(outputData, outputPos - 2) -
+                        BitConverter.ToInt16(outputData, outputPos - 4));
+                    for (int i = 0; i < ((byteValue & 0x0F) + 2); i++)
                     {
-                        int delta = outputData[outputPos - 1] - outputData[outputPos - 2];
-                        for (int i = 0; i < ((byteValue & 0x0F) + 3); i++)
-                        {
-                            outputData[outputPos] = (byte)((outputData[outputPos - 1] + delta) & 0xFF);
-                            outputPos++;
-                        }
-                        inputPos++;
+                        short newShort = (short)(BitConverter.ToInt16(outputData, outputPos - 2) + delta);
+                        outputData[outputPos] = (byte)(newShort & 0xFF);
+                        outputData[outputPos + 1] = (byte)((newShort >> 8) & 0xFF);
+                        outputPos += 2;
                     }
-                    else if (byteValue <= 0x5F) // 0x50 to 0x5F: generate ascending words based on last 2 words
+                    inputPos++;
+                }
+                else if (byteValue <= 0x6F) // 0x60 to 0x6F: clone last byte in output
+                {
+                    for (int i = 0; i < ((byteValue & 0x0F) + 3); i++)
                     {
-                        short delta = (short)(BitConverter.ToInt16(outputData, outputPos - 2) -
-                            BitConverter.ToInt16(outputData, outputPos - 4));
-                        for (int i = 0; i < ((byteValue & 0x0F) + 2); i++)
-                        {
-                            short newShort = (short)(BitConverter.ToInt16(outputData, outputPos - 2) + delta);
-                            outputData[outputPos] = (byte)(newShort & 0xFF);
-                            outputData[outputPos + 1] = (byte)((newShort >> 8) & 0xFF);
-                            outputPos += 2;
-                        }
-                        inputPos++;
+                        outputData[outputPos] = outputData[outputPos - 1];
+                        outputPos++;
                     }
-                    else if (byteValue <= 0x6F) // 0x60 to 0x6F: clone last byte in output
+                    inputPos++;
+                }
+                else if (byteValue <= 0x7F) // 0x70 to 0x7F: clone last word in output
+                {
+                    for (int i = 0; i < ((byteValue & 0x0F) + 2); i++)
                     {
-                        for (int i = 0; i < ((byteValue & 0x0F) + 3); i++)
-                        {
-                            outputData[outputPos] = outputData[outputPos - 1];
-                            outputPos++;
-                        }
-                        inputPos++;
+                        outputData[outputPos] = outputData[outputPos - 2];
+                        outputData[outputPos + 1] = outputData[outputPos - 1];
+                        outputPos += 2;
                     }
-                    else if (byteValue <= 0x7F) // 0x70 to 0x7F: clone last word in output
+                    inputPos++;
+                }
+                else if (byteValue <= 0xBF) // 0x80 to 0xBF: clone 3 bytes using offset
+                {
+                    int offset = (byteValue & 0x3F);
+                    outputData[outputPos] = outputData[outputPos - offset - 3];
+                    outputData[outputPos + 1] = outputData[outputPos - offset - 2];
+                    outputData[outputPos + 2] = outputData[outputPos - offset - 1];
+                    outputPos += 3;
+                    inputPos++;
+                }
+                else if (byteValue <= 0xDF) // 0xC0 to 0xDF: clone using offset and length from next byte
+                {
+                    int offset = ((byteValue & 0x03) << 8) + Convert.ToInt32(inputData[inputPos + 1]) + 3;
+                    int length = ((byteValue >> 2) & 0x07) + 4;
+                    for (int i = 0; i < length; i++)
                     {
-                        for (int i = 0; i < ((byteValue & 0x0F) + 2); i++)
-                        {
-                            outputData[outputPos] = outputData[outputPos - 2];
-                            outputData[outputPos + 1] = outputData[outputPos - 1];
-                            outputPos += 2;
-                        }
-                        inputPos++;
+                        outputData[outputPos] = outputData[outputPos - offset];
+                        outputPos++;
                     }
-                    else if (byteValue <= 0xBF) // 0x80 to 0xBF: clone 3 bytes using offset
+                    inputPos += 2;
+                }
+                else // 0xE0 to 0xFF: clone using offset and length from next 2 bytes
+                {
+                    int offset = ((byteValue & 0x1F) << 8) + Convert.ToInt32(inputData[inputPos + 1]) + 3;
+                    int length = Convert.ToInt32(inputData[inputPos + 2]) + 5;
+                    for (int i = 0; i < length; i++)
                     {
-                        int offset = (byteValue & 0x3F);
-                        outputData[outputPos] = outputData[outputPos - offset - 3];
-                        outputData[outputPos + 1] = outputData[outputPos - offset - 2];
-                        outputData[outputPos + 2] = outputData[outputPos - offset - 1];
-                        outputPos += 3;
-                        inputPos++;
+                        outputData[outputPos] = outputData[outputPos - offset];
+                        outputPos++;
                     }
-                    else if (byteValue <= 0xDF) // 0xC0 to 0xDF: clone using offset and length from next byte
-                    {
-                        int offset = ((byteValue & 0x03) << 8) + Convert.ToInt32(inputData[inputPos + 1]) + 3;
-                        int length = ((byteValue >> 2) & 0x07) + 4;
-                        for (int i = 0; i < length; i++)
-                        {
-                            outputData[outputPos] = outputData[outputPos - offset];
-                            outputPos++;
-                        }
-                        inputPos += 2;
-                    }
-                    else // 0xE0 to 0xFF: clone using offset and length from next 2 bytes
-                    {
-                        int offset = ((byteValue & 0x1F) << 8) + Convert.ToInt32(inputData[inputPos + 1]) + 3;
-                        int length = Convert.ToInt32(inputData[inputPos + 2]) + 5;
-                        for (int i = 0; i < length; i++)
-                        {
-                            outputData[outputPos] = outputData[outputPos - offset];
-                            outputPos++;
-                        }
-                        inputPos += 3;
-                    }
+                    inputPos += 3;
                 }
             }
             return outputData;
@@ -112,38 +106,23 @@ namespace Whiptools
 
     class Mangler
     {
-        // Optional: easily disable rare/buggy families while debugging
-        private const bool ENABLE_RLE_BYTE = true;  // 0x60..0x6F (clone last byte)
-        private const bool ENABLE_RLE_WORD = true;  // 0x70..0x7F (clone last word)
-        private const bool ENABLE_PREDICT_BYTE = true;  // 0x40..0x4F (byte predictor)
-        private const bool ENABLE_PREDICT_WORD = true;  // 0x50..0x5F (word predictor)
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int Remaining(int pos, int length) => length - pos;
-
         public static byte[] Mangle(byte[] input)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 
             var output = new List<byte>(input.Length / 2 + 16);
-
-            // SAFETY: always write uncompressed length in little-endian explicitly
-            int n = input.Length;
-            output.Add((byte)(n & 0xFF));
-            output.Add((byte)((n >> 8) & 0xFF));
-            output.Add((byte)((n >> 16) & 0xFF));
-            output.Add((byte)((n >> 24) & 0xFF));
+            output.AddRange(BitConverter.GetBytes(input.Length)); // original length
 
             var literals = new List<byte>(64);
             int pos = 0;
 
             while (pos < input.Length)
             {
-                // Try specialized encodings first (optionally toggle while debugging)
-                if (ENABLE_RLE_BYTE && TryCloneLastByte(input, pos, literals, output, ref pos)) continue;
-                if (ENABLE_RLE_WORD && TryCloneLastWord(input, pos, literals, output, ref pos)) continue;
-                if (ENABLE_PREDICT_BYTE && TryPredictByteSeq(input, pos, literals, output, ref pos)) continue;
-                if (ENABLE_PREDICT_WORD && TryPredictWordSeq(input, pos, literals, output, ref pos)) continue;
+                // Try specialized encodings first
+                if (TryCloneLastByte(input, pos, literals, output, ref pos)) continue;
+                if (TryCloneLastWord(input, pos, literals, output, ref pos)) continue;
+                if (TryPredictByteSeq(input, pos, literals, output, ref pos)) continue;
+                if (TryPredictWordSeq(input, pos, literals, output, ref pos)) continue;
 
                 // Try back-reference
                 if (TryBackref(input, pos, literals, output, ref pos)) continue;
@@ -154,18 +133,13 @@ namespace Whiptools
                 if (literals.Count == 63)
                     FlushLiterals(literals, output);
             }
-
             FlushLiterals(literals, output);
 
-#if DEBUG
-            // Throws if a command would overrun the decompressed length or violate lookback
-            VerifyStream(output.ToArray());
-#endif
-
+            output.Add((byte)0x00); // terminate with zero
             return output.ToArray();
         }
 
-        // ----------------- Literals (0x00..0x3F) -----------------
+        // ----------------- Literals -----------------
 
         private static void FlushLiterals(List<byte> literals, List<byte> output)
         {
@@ -173,19 +147,15 @@ namespace Whiptools
             while (idx < literals.Count)
             {
                 int chunk = Math.Min(63, literals.Count - idx);
-                // Do not emit zero-length literal packets
-                if (chunk <= 0) break;
-
                 output.Add((byte)chunk);
                 for (int i = 0; i < chunk; i++)
                     output.Add(literals[idx + i]);
-
                 idx += chunk;
             }
             literals.Clear();
         }
 
-        // ----------------- RLE byte (0x60..0x6F) -----------------
+        // ----------------- RLE (0x60..0x6F) -----------------
 
         private static bool TryCloneLastByte(byte[] input, int pos, List<byte> literals, List<byte> output, ref int newPos)
         {
@@ -198,12 +168,7 @@ namespace Whiptools
             if (run < 3) return false;
 
             FlushLiterals(literals, output);
-            int remaining = Remaining(pos, input.Length);
             int toEmit = Math.Min(run, 18);
-            toEmit = Math.Min(toEmit, remaining); // SAFETY: don’t overshoot end
-
-            if (toEmit < 3) return false;
-
             byte ctrl = (byte)(0x60 | (toEmit - 3));
             output.Add(ctrl);
 
@@ -211,12 +176,13 @@ namespace Whiptools
             return true;
         }
 
-        // ----------------- RLE word (0x70..0x7F) -----------------
+        // ----------------- Word clone (0x70..0x7F) -----------------
 
         private static bool TryCloneLastWord(byte[] input, int pos, List<byte> literals, List<byte> output, ref int newPos)
         {
-            if (pos < 2 || pos + 1 >= input.Length) return false;
+            if (pos < 2) return false;
 
+            if (pos + 1 >= input.Length) return false;
             byte a0 = input[pos], a1 = input[pos + 1];
             byte b0 = input[pos - 2], b1 = input[pos - 1];
             if (a0 != b0 || a1 != b1) return false;
@@ -224,19 +190,14 @@ namespace Whiptools
             int runWords = 1;
             while (pos + 2 * runWords + 1 < input.Length)
             {
-                if (input[pos + 2 * runWords] != b0 || input[pos + 2 * runWords + 1] != b1) break;
+                if (input[pos + 2 * runWords] != b0 || input[pos + 2 * runWords + 1] != b1)
+                    break;
                 runWords++;
             }
             if (runWords < 2) return false;
 
             FlushLiterals(literals, output);
-            int remainingBytes = Remaining(pos, input.Length);
-            int remainingWords = remainingBytes / 2; // SAFETY: decoder writes whole words
-            int toEmit = Math.Min(runWords, 17);
-            toEmit = Math.Min(toEmit, remainingWords); // SAFETY
-
-            if (toEmit < 2) return false;
-
+            int toEmit = Math.Min(runWords, 17); // 2..17 words
             byte ctrl = (byte)(0x70 | (toEmit - 2));
             output.Add(ctrl);
 
@@ -258,15 +219,11 @@ namespace Whiptools
                 prev = input[pos + len];
                 len++;
             }
+
             if (len < 3) return false;
 
             FlushLiterals(literals, output);
-            int remaining = Remaining(pos, input.Length);
-            int toEmit = Math.Min(len, 18);
-            toEmit = Math.Min(toEmit, remaining); // SAFETY
-
-            if (toEmit < 3) return false;
-
+            int toEmit = Math.Min(len, 18); // 3..18
             byte ctrl = (byte)(0x40 | (toEmit - 3));
             output.Add(ctrl);
 
@@ -294,16 +251,11 @@ namespace Whiptools
                 prev = actual;
                 len++;
             }
+
             if (len < 2) return false;
 
             FlushLiterals(literals, output);
-            int remainingBytes = Remaining(pos, input.Length);
-            int remainingWords = remainingBytes / 2; // SAFETY
-            int toEmit = Math.Min(len, 17);
-            toEmit = Math.Min(toEmit, remainingWords); // SAFETY
-
-            if (toEmit < 2) return false;
-
+            int toEmit = Math.Min(len, 17); // 2..17
             byte ctrl = (byte)(0x50 | (toEmit - 2));
             output.Add(ctrl);
 
@@ -311,27 +263,25 @@ namespace Whiptools
             return true;
         }
 
-        // ----------------- Backrefs (0x80..0xBF / 0xC0..0xDF / 0xE0..0xFF) -----------------
+        // ----------------- Backrefs -----------------
 
         private static bool TryBackref(byte[] input, int pos, List<byte> literals, List<byte> output, ref int newPos)
         {
             int bestLen = 0;
             int bestDist = 0;
             int maxSearch = Math.Min(pos, 8194);
-            int remaining = Remaining(pos, input.Length);
 
-            // Find best match; never propose longer than remaining
             for (int dist = 3; dist <= maxSearch; dist++)
             {
                 int s = pos - dist;
                 int m = 0;
-                int maxM = Math.Min(remaining, 260); // 260 is the long-copy max
+                int maxM = Math.Min(input.Length - pos, 260);
                 while (m < maxM && input[s + m] == input[pos + m]) m++;
                 if (m > bestLen)
                 {
                     bestLen = m;
                     bestDist = dist;
-                    if (bestLen == maxM) break;
+                    if (bestLen == 260) break;
                 }
             }
 
@@ -339,32 +289,23 @@ namespace Whiptools
 
             FlushLiterals(literals, output);
 
-            // Prefer long, then short, then fixed-3, clamping each time
             if (bestLen >= 5 && bestDist <= 8194)
             {
                 int len = Math.Min(bestLen, 260);
-                len = Math.Min(len, remaining); // SAFETY
-                if (len >= 5)
-                {
-                    EmitCopyLong(output, bestDist, len);
-                    newPos = pos + len;
-                    return true;
-                }
+                EmitCopyLong(output, bestDist, len);
+                newPos = pos + len;
+                return true;
             }
             if (bestLen >= 4 && bestDist <= 1026)
             {
                 int len = Math.Min(bestLen, 11);
-                len = Math.Min(len, remaining); // SAFETY
-                if (len >= 4)
-                {
-                    EmitCopyShort(output, bestDist, len);
-                    newPos = pos + len;
-                    return true;
-                }
+                EmitCopyShort(output, bestDist, len);
+                newPos = pos + len;
+                return true;
             }
-            if (bestLen >= 3 && bestDist <= 66 && remaining >= 3)
+            if (bestLen >= 3 && bestDist <= 66)
             {
-                EmitCopy3(output, bestDist); // always copies exactly 3 bytes
+                EmitCopy3(output, bestDist);
                 newPos = pos + 3;
                 return true;
             }
@@ -374,7 +315,6 @@ namespace Whiptools
 
         private static void EmitCopy3(List<byte> output, int distance)
         {
-            if (distance < 3 || distance > 66) throw new ArgumentOutOfRangeException(nameof(distance));
             int off = distance - 3;
             byte ctrl = (byte)(0x80 | off);
             output.Add(ctrl);
@@ -382,9 +322,6 @@ namespace Whiptools
 
         private static void EmitCopyShort(List<byte> output, int distance, int length)
         {
-            if (distance < 3 || distance > 1026) throw new ArgumentOutOfRangeException(nameof(distance));
-            if (length < 4 || length > 11) throw new ArgumentOutOfRangeException(nameof(length));
-
             int off = distance - 3;
             int offHi = (off >> 8) & 0x03;
             int offLo = off & 0xFF;
@@ -395,9 +332,6 @@ namespace Whiptools
 
         private static void EmitCopyLong(List<byte> output, int distance, int length)
         {
-            if (distance < 3 || distance > 8194) throw new ArgumentOutOfRangeException(nameof(distance));
-            if (length < 5 || length > 260) throw new ArgumentOutOfRangeException(nameof(length));
-
             int off = distance - 3;
             int offHi = (off >> 8) & 0x1F;
             int offLo = off & 0xFF;
@@ -407,98 +341,6 @@ namespace Whiptools
             output.Add((byte)offLo);
             output.Add(lenByte);
         }
-
-#if DEBUG
-        // ----------------- Stream verifier (debug only) -----------------
-
-        private static void VerifyStream(byte[] encoded)
-        {
-            if (encoded == null || encoded.Length < 4) throw new Exception("Encoded stream too short");
-
-            int outLen = encoded[0] | (encoded[1] << 8) | (encoded[2] << 16) | (encoded[3] << 24);
-            int inPos = 4, outPos = 0;
-
-            while (inPos < encoded.Length)
-            {
-                if (outPos > outLen) throw new Exception("Overwrote past end");
-                int ctrl = encoded[inPos++];
-
-                if (ctrl <= 0x3F)
-                {
-                    int n = ctrl;
-                    if (outPos + n > outLen) throw new Exception("Literal overshoot");
-                    if (inPos + n > encoded.Length) throw new Exception("Input underrun on literals");
-                    outPos += n; inPos += n;
-                }
-                else if (ctrl <= 0x4F)
-                {
-                    int need = (ctrl & 0x0F) + 3;
-                    if (outPos < 2) throw new Exception("Predict bytes needs 2 prior bytes");
-                    if (outPos + need > outLen) throw new Exception("Predict bytes overshoot");
-                    outPos += need;
-                }
-                else if (ctrl <= 0x5F)
-                {
-                    int need = (ctrl & 0x0F) + 2;
-                    if (outPos < 4) throw new Exception("Predict words needs 4 prior bytes");
-                    if (outPos + 2 * need > outLen) throw new Exception("Predict words overshoot");
-                    outPos += 2 * need;
-                }
-                else if (ctrl <= 0x6F)
-                {
-                    int need = (ctrl & 0x0F) + 3;
-                    if (outPos < 1) throw new Exception("RLE byte needs 1 prior byte");
-                    if (outPos + need > outLen) throw new Exception("RLE byte overshoot");
-                    outPos += need;
-                }
-                else if (ctrl <= 0x7F)
-                {
-                    int need = (ctrl & 0x0F) + 2;
-                    if (outPos < 2) throw new Exception("RLE word needs 2 prior bytes");
-                    if (outPos + 2 * need > outLen) throw new Exception("RLE word overshoot");
-                    outPos += 2 * need;
-                }
-                else if (ctrl <= 0xBF)
-                {
-                    int dist = (ctrl & 0x3F) + 3;
-                    if (dist < 3 || dist > 66) throw new Exception("Copy3 distance out of range");
-                    if (outPos < dist) throw new Exception("Copy3 backref before start");
-                    if (outPos + 3 > outLen) throw new Exception("Copy3 overshoot");
-                    outPos += 3;
-                }
-                else if (ctrl <= 0xDF)
-                {
-                    if (inPos >= encoded.Length) throw new Exception("Missing short offLo");
-                    int offHi = ctrl & 0x03;
-                    int len = ((ctrl >> 2) & 0x07) + 4;
-                    int offLo = encoded[inPos++];
-                    int dist = (offHi << 8) + offLo + 3;
-                    if (dist < 3 || dist > 1026) throw new Exception("Short copy distance out of range");
-                    if (outPos < dist) throw new Exception("Short copy before start");
-                    if (outPos + len > outLen) throw new Exception("Short copy overshoot");
-                    outPos += len;
-                }
-                else
-                {
-                    if (inPos + 1 >= encoded.Length) throw new Exception("Missing long off/len");
-                    int offHi = ctrl & 0x1F;
-                    int offLo = encoded[inPos++];
-                    int len = encoded[inPos++] + 5;
-                    int dist = (offHi << 8) + offLo + 3;
-                    if (dist < 3 || dist > 8194) throw new Exception("Long copy distance out of range");
-                    if (len < 5 || len > 260) throw new Exception("Long copy length out of range");
-                    if (outPos < dist) throw new Exception("Long copy before start");
-                    if (outPos + len > outLen) throw new Exception("Long copy overshoot");
-                    outPos += len;
-                }
-
-                if (outPos == outLen) break; // hard stop once full
-            }
-
-            if (outPos != outLen)
-                throw new Exception($"Did not produce exact output length (got {outPos}, expected {outLen})");
-        }
-#endif
     }
 
     class FibCipher
