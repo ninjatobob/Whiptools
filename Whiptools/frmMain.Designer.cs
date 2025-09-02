@@ -54,6 +54,7 @@ namespace Whiptools
             this.btnLoadImage = new System.Windows.Forms.Button();
             this.btnConvertImage = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnMangle = new System.Windows.Forms.Button();
             this.btnUnmangle = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.btnConvertRAWAudio = new System.Windows.Forms.Button();
@@ -61,7 +62,6 @@ namespace Whiptools
             this.btnDecodePasswordIni = new System.Windows.Forms.Button();
             this.btnDecodeFatalIni = new System.Windows.Forms.Button();
             this.btnDecodeCheatAudio = new System.Windows.Forms.Button();
-            this.btnMangle = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -302,7 +302,17 @@ namespace Whiptools
             this.groupBox3.Size = new System.Drawing.Size(557, 70);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "File Unmangling";
+            this.groupBox3.Text = "File Mangling";
+            // 
+            // btnMangle
+            // 
+            this.btnMangle.Location = new System.Drawing.Point(282, 19);
+            this.btnMangle.Name = "btnMangle";
+            this.btnMangle.Size = new System.Drawing.Size(264, 36);
+            this.btnMangle.TabIndex = 1;
+            this.btnMangle.Text = "Mangle Files";
+            this.btnMangle.UseVisualStyleBackColor = true;
+            this.btnMangle.Click += new System.EventHandler(this.btnMangleFiles_Click);
             // 
             // btnUnmangle
             // 
@@ -375,16 +385,6 @@ namespace Whiptools
             this.btnDecodeCheatAudio.Text = "Decode Cheat Audio";
             this.btnDecodeCheatAudio.UseVisualStyleBackColor = true;
             this.btnDecodeCheatAudio.Click += new System.EventHandler(this.btnDecodeCheatAudio_Click);
-            // 
-            // btnMangle
-            // 
-            this.btnMangle.Location = new System.Drawing.Point(282, 19);
-            this.btnMangle.Name = "btnMangle";
-            this.btnMangle.Size = new System.Drawing.Size(264, 36);
-            this.btnMangle.TabIndex = 1;
-            this.btnMangle.Text = "Mangle Files";
-            this.btnMangle.UseVisualStyleBackColor = true;
-            this.btnMangle.Click += new System.EventHandler(this.btnMangleFiles_Click);
             // 
             // frmMain
             // 
