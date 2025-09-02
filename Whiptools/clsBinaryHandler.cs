@@ -270,18 +270,28 @@ namespace Whiptools
             int bestLen = 0;
             int bestDist = 0;
             int maxSearch = Math.Min(pos, 8194);
+            int maxMatch = Math.Min(input.Length - pos, 260);
 
             for (int dist = 3; dist <= maxSearch; dist++)
             {
                 int s = pos - dist;
                 int m = 0;
-                int maxM = Math.Min(input.Length - pos, 260);
-                while (m < maxM && input[s + m] == input[pos + m]) m++;
+
+                // Quick reject: check first byte before entering loop
+                if (input[s] != input[pos]) continue;
+
+                while (m < maxMatch && input[s + m] == input[pos + m]) m++;
+
                 if (m > bestLen)
                 {
                     bestLen = m;
                     bestDist = dist;
+
+                    // Early exit: can't encode longer than 260
                     if (bestLen == 260) break;
+
+                    // Optional: break if bestLen already >= 18
+                    if (bestLen >= 18 && bestDist <= 8194) break;
                 }
             }
 
