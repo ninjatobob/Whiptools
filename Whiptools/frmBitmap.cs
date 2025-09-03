@@ -17,10 +17,12 @@ namespace Whiptools
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Portable Network Graphics (*.png)|*.png|Windows Bitmap (*.bmp)|*.bmp|All Files (*.*)|*.*";
-            saveFileDialog.FileName = filename.Replace(frmMain.mangledSuffix, "");
-            saveFileDialog.Title = "Save As";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Portable Network Graphics (*.png)|*.png|Windows Bitmap (*.bmp)|*.bmp|All Files (*.*)|*.*",
+                FileName = filename.Replace(frmMain.mangledSuffix, ""),
+                Title = "Save As"
+            };
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 Bitmap bitmap = new Bitmap(pictureBox1.Image);

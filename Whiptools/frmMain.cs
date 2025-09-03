@@ -50,15 +50,19 @@ namespace Whiptools
 
         private void FileMangling(bool unmangle)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = MangleType(!unmangle) + "d Files (*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RFR;*.RGE;*.TRK)|" +
-                "*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RFR;*.RGE;*.TRK|All Files (*.*)|*.*";
-            openFileDialog.Title = "Select " + MangleType(!unmangle) + "d Files";
-            openFileDialog.Multiselect = true;
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = MangleType(!unmangle) + "d Files (*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RFR;*.RGE;*.TRK)|" +
+                    "*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RFR;*.RGE;*.TRK|All Files (*.*)|*.*",
+                Title = "Select " + MangleType(!unmangle) + "d Files",
+                Multiselect = true
+            };
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-                folderBrowserDialog.Description = "Save " + MangleType(unmangle).ToLower() + "d files in:";
+                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog
+                {
+                    Description = "Save " + MangleType(unmangle).ToLower() + "d files in:"
+                };
                 if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                 {
                     int countSucc = 0;
@@ -125,14 +129,18 @@ namespace Whiptools
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Whiplash Cheat Audio (*.KC)|*.KC|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select Cheat Audio Files";
-                openFileDialog.Multiselect = true;
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    Filter = "Whiplash Cheat Audio (*.KC)|*.KC|All Files (*.*)|*.*",
+                    Title = "Select Cheat Audio Files",
+                    Multiselect = true
+                };
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-                    folderBrowserDialog.Description = "Save RAW files in:";
+                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog
+                    {
+                        Description = "Save RAW files in:"
+                    };
                     if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                     {
                         string outputfile = "";
@@ -178,14 +186,18 @@ namespace Whiptools
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Whiplash INI Files (*.INI)|*.INI|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select " + IniFilename + " File";
-                openFileDialog.Multiselect = false;
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    Filter = "Whiplash INI Files (*.INI)|*.INI|All Files (*.*)|*.*",
+                    Title = "Select " + IniFilename + " File",
+                    Multiselect = false
+                };
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-                    folderBrowserDialog.Description = "Save INI file in:";
+                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog
+                    {
+                        Description = "Save INI file in:"
+                    };
                     if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                     {
                         string outputfile = "";
@@ -215,14 +227,18 @@ namespace Whiptools
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Whiplash Raw Audio (*.RAW;*.RFR;*.RGE)|*.RAW;*.RFR;*.RGE|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select Raw Audio Files";
-                openFileDialog.Multiselect = true;
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    Filter = "Whiplash Raw Audio (*.RAW;*.RFR;*.RGE)|*.RAW;*.RFR;*.RGE|All Files (*.*)|*.*",
+                    Title = "Select Raw Audio Files",
+                    Multiselect = true
+                };
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-                    folderBrowserDialog.Description = "Save WAV files in:";
+                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog
+                    {
+                        Description = "Save WAV files in:"
+                    };
                     if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                     {
                         string outputfile = "";
@@ -260,9 +276,11 @@ namespace Whiptools
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Whiplash Bitmaps (*.BM;*.DRH)|*.BM;*.DRH|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select Bitmap File";
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    Filter = "Whiplash Bitmaps (*.BM;*.DRH)|*.BM;*.DRH|All Files (*.*)|*.*",
+                    Title = "Select Bitmap File"
+                };
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -319,9 +337,11 @@ namespace Whiptools
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Whiplash Palettes (*.PAL)|*.PAL|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select Palette File";
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    Filter = "Whiplash Palettes (*.PAL)|*.PAL|All Files (*.*)|*.*",
+                    Title = "Select Palette File"
+                };
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -345,10 +365,12 @@ namespace Whiptools
             try
             {
                 string filename = Path.GetFileNameWithoutExtension(paletteName) + "_palette";
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = "Portable Network Graphics (*.png)|*.png|Windows Bitmap (*.bmp)|*.bmp|All Files (*.*)|*.*";
-                saveFileDialog.FileName = filename.Replace("_unmangled", "");
-                saveFileDialog.Title = "Export Palette";
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "Portable Network Graphics (*.png)|*.png|Windows Bitmap (*.bmp)|*.bmp|All Files (*.*)|*.*",
+                    FileName = filename.Replace("_unmangled", ""),
+                    Title = "Export Palette"
+                };
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     Bitmap bitmap = Bitmapper.ConvertPaletteToBitmap(paletteData);
@@ -407,9 +429,11 @@ namespace Whiptools
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Image Files (*.png;*.bmp)|*.png;*.bmp|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select Image File";
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    Filter = "Image Files (*.png;*.bmp)|*.png;*.bmp|All Files (*.*)|*.*",
+                    Title = "Select Image File"
+                };
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     newBitmapName = openFileDialog.FileName;
@@ -441,10 +465,12 @@ namespace Whiptools
 
         private void SavePalette(Color[] palette, string defaultFileName)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Palette Files (*.PAL)|*.PAL|All Files (*.*)|*.*";
-            saveFileDialog.Title = "Save Palette As";
-            saveFileDialog.FileName = Path.GetFileNameWithoutExtension(defaultFileName);
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Palette Files (*.PAL)|*.PAL|All Files (*.*)|*.*",
+                Title = "Save Palette As",
+                FileName = Path.GetFileNameWithoutExtension(defaultFileName)
+            };
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filename = saveFileDialog.FileName;
@@ -469,9 +495,11 @@ namespace Whiptools
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Whiplash Palettes (*.PAL)|*.PAL|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select Palette File";
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    Filter = "Whiplash Palettes (*.PAL)|*.PAL|All Files (*.*)|*.*",
+                    Title = "Select Palette File"
+                };
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -499,18 +527,22 @@ namespace Whiptools
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Whiplash Palettes (*.PAL)|*.PAL|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select Palette File";
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    Filter = "Whiplash Palettes (*.PAL)|*.PAL|All Files (*.*)|*.*",
+                    Title = "Select Palette File"
+                };
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string paletteFilename = openFileDialog.FileName;
 
-                    SaveFileDialog saveFileDialog = new SaveFileDialog();
-                    saveFileDialog.Filter = "BM File (*.BM)|*.BM|DRH File (*.DRH)|*.DRH|All Files (*.*)|*.*";
-                    saveFileDialog.FileName = Path.GetFileNameWithoutExtension(newBitmapName);
-                    saveFileDialog.Title = "Save Bitmap As";
+                    SaveFileDialog saveFileDialog = new SaveFileDialog
+                    {
+                        Filter = "BM File (*.BM)|*.BM|DRH File (*.DRH)|*.DRH|All Files (*.*)|*.*",
+                        FileName = Path.GetFileNameWithoutExtension(newBitmapName),
+                        Title = "Save Bitmap As"
+                    };
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
                         Color[] palette = Bitmapper.ConvertByteToPalette(File.ReadAllBytes(paletteFilename));
