@@ -2,12 +2,12 @@
 
 namespace Whiptools
 {
-    class AudioConverter
+    class WavAudio
     {
         static int sampleRate = 11025;
         static short bitDepth = 8;
 
-        public static byte[] RawToWav(byte[] rawBytes)
+        public static byte[] ConvertRawToWav(byte[] rawBytes)
         {
             using (MemoryStream outputStream = new MemoryStream())
             {
@@ -60,5 +60,10 @@ namespace Whiptools
             byte[] bytes = System.Text.Encoding.ASCII.GetBytes(value);
             stream.Write(bytes, 0, bytes.Length);
         }
+    }
+
+    class HMIMIDI
+    {
+
     }
 }

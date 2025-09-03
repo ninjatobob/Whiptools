@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -20,6 +22,9 @@ namespace Whiptools
         private Bitmap newBitmap;
         private Color[] newPalette;
         private string newBitmapName;
+
+        public const string mangledSuffix = "_mang";
+        public const string unmangledSuffix = "_unmang";
 
         public frmMain()
         {
@@ -45,48 +50,67 @@ namespace Whiptools
 
         private void FileMangling(bool unmangle)
         {
-            try
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = MangleType(!unmangle) + "d Files (*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RFR;*.RGE;*.TRK)|" +
+                "*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RFR;*.RGE;*.TRK|All Files (*.*)|*.*";
+            openFileDialog.Title = "Select " + MangleType(!unmangle) + "d Files";
+            openFileDialog.Multiselect = true;
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = MangleType(!unmangle) + "d Files (*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RFR;*.RGE;*.TRK)|" +
-                    "*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RFR;*.RGE;*.TRK|All Files (*.*)|*.*";
-                openFileDialog.Title = "Select " + MangleType(!unmangle) + "d Files";
-                openFileDialog.Multiselect = true;
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                folderBrowserDialog.Description = "Save " + MangleType(unmangle).ToLower() + "d files in:";
+                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                 {
-                    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-                    folderBrowserDialog.Description = "Save " + MangleType(unmangle).ToLower() + "d files in:";
-                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                    int countSucc = 0;
+                    int countFail = 0;
+                    string displayoutputfile = ""; // for dialog only
+                    var filelist = openFileDialog.FileNames
+                        .Select(f => new FileInfo(f))
+                        .OrderByDescending(fi => fi.Length);
+                    Parallel.ForEach(filelist, fi =>
                     {
-                        string outputfile = "";
-                        var filelist = openFileDialog.FileNames
-                            .Select(f => new FileInfo(f))
-                            .OrderByDescending(fi => fi.Length);
-                        Parallel.ForEach(filelist, fi =>
+                        try
                         {
                             byte[] inputData = File.ReadAllBytes(fi.FullName);
                             byte[] outputData = unmangle ? Unmangler.Unmangle(inputData) : Mangler.Mangle(inputData);
-                            outputfile = folderBrowserDialog.SelectedPath + "\\" + Path.GetFileNameWithoutExtension(fi.FullName) +
-                                "_" + MangleType(unmangle).ToLower() + "d" + Path.GetExtension(fi.FullName);
-                            File.WriteAllBytes(outputfile, outputData);
-                        });
-                        string msg = "";
-                        if (openFileDialog.FileNames.Length == 1)
-                        {
-                            msg = "Saved " + outputfile;
+                            if (outputData == null || outputData.Length == 0)
+                                Interlocked.Increment(ref countFail);
+                            else
+                            {
+                                string outputfile = folderBrowserDialog.SelectedPath + "\\" + Path.GetFileNameWithoutExtension(fi.FullName) +
+                                    (unmangle ? unmangledSuffix : mangledSuffix) + Path.GetExtension(fi.FullName);
+                                File.WriteAllBytes(outputfile, outputData);
+                                Interlocked.Increment(ref countSucc);
+                                displayoutputfile = outputfile;
+                            }
                         }
+                        catch
+                        {
+                            Interlocked.Increment(ref countFail);
+                        }
+                    });
+                    string msg = "";
+                    if (openFileDialog.FileNames.Length == 1)
+                    {
+                        if (countSucc == 1)
+                            msg = "Saved " + displayoutputfile;
                         else
-                        {
-                            msg = "Saved " + openFileDialog.FileNames.Length + " " + MangleType(unmangle).ToLower() +
-                                "d files in " + folderBrowserDialog.SelectedPath;
-                        }
-                        MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            msg = "Error processing " + openFileDialog.FileNames.ElementAt(0);
                     }
+                    else
+                    {
+                        if (countSucc > 0)
+                            msg = "Saved " + countSucc + " " + MangleType(unmangle).ToLower() +
+                                "d file(s) in " + folderBrowserDialog.SelectedPath;
+                        if (countFail > 0)
+                            msg = msg + (countSucc > 0 ? "\n\n" : "") + "Failed to " +
+                                MangleType(unmangle).ToLower() + " " + countFail + " file(s)!";
+                    }
+                    if (countFail > 0)
+                        MessageBox.Show(msg, "FATALITY!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    else
+                        MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-            }
-            catch
-            {
-                MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -205,7 +229,7 @@ namespace Whiptools
                         foreach (String filename in openFileDialog.FileNames)
                         {
                             byte[] rawData = File.ReadAllBytes(filename);
-                            byte[] wavData = AudioConverter.RawToWav(rawData);
+                            byte[] wavData = WavAudio.ConvertRawToWav(rawData);
                             outputfile = folderBrowserDialog.SelectedPath + "\\" +
                                 Path.GetFileName(filename) + ".WAV";
                             File.WriteAllBytes(outputfile, wavData);
