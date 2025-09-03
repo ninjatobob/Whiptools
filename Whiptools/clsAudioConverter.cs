@@ -74,7 +74,7 @@ namespace Whiptools
 
         public static byte[] ConvertToRevisedFormat(byte[] inputData)
         {
-            if (CheckOriginalSpec(inputData)) // must be original HMP file spec
+            if (CheckOriginalFormat(inputData)) // must be original HMP file format
             {
                 int inputLen = inputData.Length;
                 byte[] outputData = new byte[inputLen + chunkStartRevised - chunkStartOrig];
@@ -97,7 +97,7 @@ namespace Whiptools
             }
         }
 
-        private static bool CheckOriginalSpec(byte[] inputData)
+        private static bool CheckOriginalFormat(byte[] inputData)
         {
             // check length
             if (inputData.Length < chunkStartOrig)
