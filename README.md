@@ -5,6 +5,7 @@ Tools for decoding, encoding and viewing Fatal Racing/Whiplash game files:
 - Decoding of cheat audio from .KC to .RAW format
 - Decoding of FATAL.INI and PASSWORD.INI files
 - Conversion of audio from .RAW/.RFR/.RGE to .WAV format
+- Conversion of incompatible .HMP MIDI files to compatible revised format
 - Bitmap generation from texture (.BM, .DRH) and palette (.PAL) files
 - Palette file extraction and export to image
 - Conversion of images to .BM/.DRH format
