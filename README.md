@@ -10,6 +10,8 @@ Tools for decoding, encoding and viewing Fatal Racing/Whiplash game files:
 - Palette file extraction and export to image
 - Conversion of images to .BM/.DRH format
 
+![Whiplash XP](https://github.com/FatalDecomp/Whiptools/blob/df7a513cd9fe45e0d2a623b30dc46dbafe08184d/sample-files/Whiplash%20XP.png)
+
 ### Resources
 - [Implementation of the unmangling algorithm](https://gist.github.com/samunders-core/1acaadc064f203e4f2ab769c7dfabeda) by [@samunders-core](https://github.com/samunders-core)
 - [Decompilation of sound.c](https://github.com/Zizin13/ROLLER/blob/b16cacf124f4ff2654fc3f8f77e7760780c49879/PROJECTS/ROLLER/sound.c) by [@Zizin13](https://github.com/Zizin13)
