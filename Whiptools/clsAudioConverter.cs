@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Whiptools
 {
@@ -62,8 +63,13 @@ namespace Whiptools
         }
     }
 
-    class HMIMIDI
+    class HMPMIDI
     {
-
+        public static byte[] ConvertToRevisedFormat(byte[] inputData)
+        {
+            int outputLength = inputData.Length + 1000;
+            byte[] outputData = new byte[outputLength];
+            return outputData;
+        }
     }
 }

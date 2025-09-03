@@ -24,6 +24,7 @@ namespace Whiptools
 
         public const string mangledSuffix = "_mang";
         public const string unmangledSuffix = "_unmang";
+        public const string revisedSuffix = "_revised"; // HMPMIDI
 
         public frmMain()
         {
@@ -66,7 +67,7 @@ namespace Whiptools
                 {
                     int countSucc = 0;
                     int countFail = 0;
-                    string displayoutputfile = ""; // for dialog only
+                    string displayoutputfile = ""; // for msgbox only
                     var filelist = openFileDialog.FileNames
                         .Select(f => new FileInfo(f))
                         .OrderByDescending(fi => fi.Length);
@@ -77,10 +78,13 @@ namespace Whiptools
                             byte[] inputData = File.ReadAllBytes(fi.FullName);
                             byte[] outputData = unmangle ? Unmangler.Unmangle(inputData) : Mangler.Mangle(inputData);
                             if (outputData == null || outputData.Length == 0)
+                            {
                                 Interlocked.Increment(ref countFail);
+                            }
                             else
                             {
-                                string outputfile = folderBrowserDialog.SelectedPath + "\\" + Path.GetFileNameWithoutExtension(fi.FullName) +
+                                string outputfile = folderBrowserDialog.SelectedPath + "\\" +
+                                    Path.GetFileNameWithoutExtension(fi.FullName) +
                                     (unmangle ? unmangledSuffix : mangledSuffix) + Path.GetExtension(fi.FullName);
                                 File.WriteAllBytes(outputfile, outputData);
                                 Interlocked.Increment(ref countSucc);
@@ -98,7 +102,8 @@ namespace Whiptools
                         if (countSucc == 1)
                             msg = "Saved " + displayoutputfile;
                         else
-                            msg = "Error processing " + openFileDialog.FileNames.ElementAt(0);
+                            msg = "Failed to " + MangleType(unmangle).ToLower() + " " +
+                                openFileDialog.FileNames.ElementAt(0);
                     }
                     else
                     {
@@ -260,7 +265,72 @@ namespace Whiptools
                 MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-    
+
+        private void btnConvertHMPMIDI_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "HMP MIDI Files (*.HMP)|*.HMP|All Files (*.*)|*.*",
+                Title = "Select HMP MIDI Files (Original Format)",
+                Multiselect = true
+            };
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog
+                {
+                    Description = "Save revised HMP files in:"
+                };
+                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                {
+                    int countSucc = 0;
+                    int countFail = 0;
+                    string outputfile = "";
+                    foreach (String filename in openFileDialog.FileNames)
+                    {
+                        try
+                        {
+                            byte[] inputData = File.ReadAllBytes(filename);
+                            byte[] outputData = HMPMIDI.ConvertToRevisedFormat(inputData);
+                            if (outputData == null || outputData.Length == 0)
+                            {
+                                countFail++;
+                            }
+                            else
+                            {
+                                outputfile = folderBrowserDialog.SelectedPath + "\\" +
+                                    Path.GetFileNameWithoutExtension(filename) + revisedSuffix + ".HMP";
+                                File.WriteAllBytes(outputfile, outputData);
+                                countSucc++;
+                            }
+                        }
+                        catch
+                        {
+                            countFail++;
+                        }
+                    }
+                    string msg = "";
+                    if (openFileDialog.FileNames.Length == 1)
+                    {
+                        if (countSucc == 1)
+                            msg = "Saved " + outputfile;
+                        else
+                            msg = "Failed to convert " + openFileDialog.FileNames.ElementAt(0);
+                    }
+                    else
+                    {
+                        if (countSucc > 0)
+                            msg = "Saved " + countSucc + " revised HMP file(s) in " + folderBrowserDialog.SelectedPath;
+                        if (countFail > 0)
+                            msg = msg + (countSucc > 0 ? "\n\n" : "") + "Failed to convert " + countFail + " file(s)!";
+                    }
+                    if (countFail > 0)
+                        MessageBox.Show(msg, "FATALITY!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    else
+                        MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
         // bitmap viewer
 
         private void btnLoadBitmap_Click(object sender, EventArgs e)
