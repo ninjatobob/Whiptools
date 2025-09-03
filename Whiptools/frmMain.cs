@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -154,14 +153,10 @@ namespace Whiptools
                         }
                         string msg = "";
                         if (openFileDialog.FileNames.Length == 1)
-                        {
                             msg = "Saved " + outputfile;
-                        }
                         else
-                        {
                             msg = "Saved " + openFileDialog.FileNames.Length + " RAW files in " +
                                 folderBrowserDialog.SelectedPath;
-                        }
                         MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
@@ -252,14 +247,10 @@ namespace Whiptools
                         }
                         string msg = "";
                         if (openFileDialog.FileNames.Length == 1)
-                        {
                             msg = "Saved " + outputfile;
-                        }
                         else
-                        {
                             msg = "Saved " + openFileDialog.FileNames.Length + " WAV files in " +
                                 folderBrowserDialog.SelectedPath;
-                        }
                         MessageBox.Show(msg, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
@@ -291,12 +282,8 @@ namespace Whiptools
 
                     int countColors = 0;
                     foreach (byte b in bitmapData)
-                    {
                         if (b > countColors)
-                        {
                             countColors = b;
-                        }
-                    }
 
                     for (int i = (int)Math.Sqrt(bitmapData.Length); i > 1; i--)
                     {
@@ -500,7 +487,6 @@ namespace Whiptools
                     Filter = "Whiplash Palettes (*.PAL)|*.PAL|All Files (*.*)|*.*",
                     Title = "Select Palette File"
                 };
-
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string filename = openFileDialog.FileName;
@@ -511,9 +497,7 @@ namespace Whiptools
 
                     Color[] outputPalette = inputPalette;
                     for (int i = 0; i < newPalette.Length; i++)
-                    {
                         outputPalette[i + offset] = newPalette[i];
-                    }
                     SavePalette(outputPalette, filename);
                 }
             }
