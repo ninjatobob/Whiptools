@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace Whiptools
 {
@@ -65,11 +66,54 @@ namespace Whiptools
 
     class HMPMIDI
     {
+        private const string headerOrig     = "HMIMIDIP";
+        private const string headerRevised  = "HMIMIDIP013195";
+        private const int headerLength      = 0x020;
+        private const int chunkStartOrig    = 0x308;
+        private const int chunkStartRevised = 0x388;
+
         public static byte[] ConvertToRevisedFormat(byte[] inputData)
         {
-            int outputLength = inputData.Length + 1000;
-            byte[] outputData = new byte[outputLength];
-            return outputData;
+            if (CheckOriginalSpec(inputData)) // must be original HMP file spec
+            {
+                int inputLen = inputData.Length;
+                byte[] outputData = new byte[inputLen + chunkStartRevised - chunkStartOrig];
+
+                // up to 0x308
+                Array.Copy(inputData, 0, outputData, 0, chunkStartOrig);
+
+                // rest of input file but start at 0x388
+                Array.Copy(inputData, chunkStartOrig, outputData, chunkStartRevised, inputLen - chunkStartOrig);
+
+                // update header
+                byte[] prefixBytes = Encoding.ASCII.GetBytes(headerRevised);
+                Array.Copy(prefixBytes, 0, outputData, 0, prefixBytes.Length);
+
+                return outputData;
+            }
+            else
+            {
+                return Array.Empty<byte>();
+            }
+        }
+
+        private static bool CheckOriginalSpec(byte[] inputData)
+        {
+            // check length
+            if (inputData.Length < chunkStartOrig)
+                return false;
+
+            // check input starts with original padded header
+            byte[] paddedBytes = new byte[headerLength];
+            byte[] prefixBytes = Encoding.ASCII.GetBytes(headerOrig);
+            Array.Copy(prefixBytes, 0, paddedBytes, 0, prefixBytes.Length);
+            for (int i = prefixBytes.Length; i < headerLength; i++)
+            {
+                if (inputData[i] != paddedBytes[i])
+                    return false;
+            }
+
+            return true;
         }
     }
 }
