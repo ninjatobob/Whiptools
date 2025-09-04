@@ -107,7 +107,7 @@ namespace Whiptools
             byte[] paddedBytes = new byte[headerLength];
             byte[] prefixBytes = Encoding.ASCII.GetBytes(headerOrig);
             Array.Copy(prefixBytes, 0, paddedBytes, 0, prefixBytes.Length);
-            for (int i = prefixBytes.Length; i < headerLength; i++)
+            for (int i = 0; i < headerLength; i++)
             {
                 if (inputData[i] != paddedBytes[i])
                     return false;
