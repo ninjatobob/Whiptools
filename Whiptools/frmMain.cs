@@ -230,8 +230,8 @@ namespace Whiptools
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
-                    Filter = "Whiplash Raw Audio (*.RAW;*.RBP;*.RFR;*.RGE;*.RSS;)|" +
-                        "*.RAW;*.RBP;*.RFR;*.RGE;*.RSS;|All Files (*.*)|*.*",
+                    Filter = "Whiplash Raw Audio (*.RAW;*.RBP;*.RFR;*.RGE;*.RSS)|" +
+                        "*.RAW;*.RBP;*.RFR;*.RGE;*.RSS|All Files (*.*)|*.*",
                     Title = "Select Raw Audio Files",
                     Multiselect = true
                 };
