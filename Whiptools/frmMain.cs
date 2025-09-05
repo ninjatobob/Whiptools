@@ -53,8 +53,8 @@ namespace Whiptools
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = MangleType(!unmangle) +
-                    "d Files (*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RFR;*.RGE;*.RBP;*.RSS;*.TRK)|" +
-                    "*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RFR;*.RGE;*.RBP;*.RSS;*.TRK|All Files (*.*)|*.*",
+                    "d Files (*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RBP;*.RFR;*.RGE;*.RSS;*.TRK)|" +
+                    "*.BM;*.DRH;*.HMP;*.KC;*.RAW;*.RBP;*.RFR;*.RGE;*.RSS;*.TRK|All Files (*.*)|*.*",
                 Title = "Select " + MangleType(!unmangle) + "d Files",
                 Multiselect = true
             };
@@ -230,8 +230,8 @@ namespace Whiptools
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
-                    Filter = "Whiplash Raw Audio (*.RAW;*.RFR;*.RGE;*.RBP;*.RSS;)|" +
-                        "*.RAW;*.RFR;*.RGE;*.RBP;*.RSS;|All Files (*.*)|*.*",
+                    Filter = "Whiplash Raw Audio (*.RAW;*.RBP;*.RFR;*.RGE;*.RSS;)|" +
+                        "*.RAW;*.RBP;*.RFR;*.RGE;*.RSS;|All Files (*.*)|*.*",
                     Title = "Select Raw Audio Files",
                     Multiselect = true
                 };
