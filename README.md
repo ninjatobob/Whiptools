@@ -1,7 +1,7 @@
 # Whiptools
 Tools for decoding, encoding and viewing Fatal Racing/Whiplash game files:
 
-- Unmangler and mangler for .BM, .DRH, .HMP, .KC, .RAW, .RFR, .RGE and .TRK files
+- Unmangler and mangler for .BM, .DRH, .HMP, .KC, .RAW, .RFR, .RGE, .RBP, .RSS and .TRK files
 - Decoding of cheat audio from .KC to .RAW format
 - Decoding of FATAL.INI and PASSWORD.INI files
 - Conversion of audio from .RAW/.RFR/.RGE to .WAV format
