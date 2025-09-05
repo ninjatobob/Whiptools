@@ -427,7 +427,7 @@ namespace Whiptools
                 SaveFileDialog saveFileDialog = new SaveFileDialog
                 {
                     Filter = "Portable Network Graphics (*.png)|*.png|Windows Bitmap (*.bmp)|*.bmp|All Files (*.*)|*.*",
-                    FileName = filename.Replace("_unmangled", ""),
+                    FileName = filename.Replace(unmangledSuffix, ""),
                     Title = "Export Palette"
                 };
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)

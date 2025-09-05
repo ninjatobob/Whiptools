@@ -20,7 +20,7 @@ namespace Whiptools
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "Portable Network Graphics (*.png)|*.png|Windows Bitmap (*.bmp)|*.bmp|All Files (*.*)|*.*",
-                FileName = filename.Replace(frmMain.mangledSuffix, ""),
+                FileName = filename.Replace(frmMain.unmangledSuffix, ""),
                 Title = "Save As"
             };
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
