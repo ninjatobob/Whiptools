@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -51,7 +52,12 @@ namespace Whiptools
             {
                 BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height),
                     ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
-                Marshal.Copy(rgbArray, 0, bitmapData.Scan0, rgbArray.Length);
+                int stride = bitmapData.Stride;
+                IntPtr ptr = bitmapData.Scan0;
+                for (int y = 0; y < height; y++)
+                {
+                    Marshal.Copy(rgbArray, y * width * 3, ptr + y * stride, width * 3);
+                }
                 bitmap.UnlockBits(bitmapData);
                 return new Bitmap(bitmap);
             }
