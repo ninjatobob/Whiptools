@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace Whiptools
 {
@@ -67,7 +68,8 @@ namespace Whiptools
                     for (int x = 0; x < inputBitmap.Width; x++)
                     {
                         Color pixel = inputBitmap.GetPixel(x, y);
-                        outputBitmap.SetPixel(x, y, Color.FromArgb(pixel.R & 0xFC, pixel.G & 0xFC, pixel.B & 0xFC));
+                        outputBitmap.SetPixel(x, y, Color.FromArgb(
+                            Round6Bit(pixel.R), Round6Bit(pixel.G), Round6Bit(pixel.B)));
                     }
                 }
                 return new Bitmap(outputBitmap);
@@ -111,10 +113,12 @@ namespace Whiptools
             {
                 for (int x = 0; x < width; x++)
                 {
-                    Color pixel = bitmap.GetPixel(x, y);
+                    Color getPixel = bitmap.GetPixel(x, y);
+                    Color newPixel = Color.FromArgb(Round6Bit(getPixel.R),
+                        Round6Bit(getPixel.G), Round6Bit(getPixel.B));
                     for (int i = 0; i < palette.Length; i++)
                     {
-                        if (palette[i] == pixel)
+                        if (palette[i] == newPixel)
                         {
                             output[y * width + x] = (byte)i;
                             break;
@@ -130,6 +134,11 @@ namespace Whiptools
         private static int Convert6BitTo8Bit(int input)
         {
             return (input << 2) + (input >> 4);
+        }
+
+        private static int Round6Bit(int input)
+        {
+            return (input & 0xFC) + (input >> 6);
         }
     }
 }

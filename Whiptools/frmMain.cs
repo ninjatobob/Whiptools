@@ -444,8 +444,7 @@ namespace Whiptools
                             MessageBox.Show("Saved " + saveFileDialog.FileName, "RACE OVER", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             break;
                         default:
-                            MessageBox.Show("FATALITY!", "NETWORK ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            break;
+                            throw new Exception();
                     }
                     bitmap.Dispose();
                 }
@@ -466,9 +465,9 @@ namespace Whiptools
                 int bitmapHeight = Convert.ToInt32(Math.Ceiling(bitmapData.Length / (double)bitmapWidth));
 
                 frmBitmap = new frmBitmap();
-                frmBitmap.pictureBox1.Image = Bitmapper.CreateBitmapFromRGB(bitmapWidth, bitmapHeight, rgbData);
-                frmBitmap.pictureBox1.Location = new Point(0, 0);
-                frmBitmap.pictureBox1.Size = new Size(bitmapWidth, bitmapHeight);
+                frmBitmap.pictureBox.Image = Bitmapper.CreateBitmapFromRGB(bitmapWidth, bitmapHeight, rgbData);
+                frmBitmap.pictureBox.Location = new Point(0, 0);
+                frmBitmap.pictureBox.Size = new Size(bitmapWidth, bitmapHeight);
                 frmBitmap.Width = Math.Max(320, Math.Min(bitmapWidth, Convert.ToInt32(Screen.PrimaryScreen.Bounds.Width * 0.95))) + 16;
                 frmBitmap.Height = Math.Min(bitmapHeight, Convert.ToInt32(Screen.PrimaryScreen.Bounds.Height * 0.95)) + 39;
                 frmBitmap.Text = bitmapName + " | " + paletteName + " | " + bitmapWidth + " x " + bitmapHeight + " | Click on image to save";
@@ -509,8 +508,8 @@ namespace Whiptools
                             newBitmap = tempBitmap;
                             newPalette = tempPalette;
                             txtImagePath.Text = newBitmapName;
-                            lblImageLoaded.Text = "Loaded " + newBitmap.Width + " x " + newBitmap.Height + ", " +
-                                    newPalette.Length + " colours";
+                            lblImageLoaded.Text = "Loaded " + newBitmap.Width + " x " +
+                                newBitmap.Height + ", " + newPalette.Length + " colours";
                         }
                     }
                 }
@@ -563,10 +562,17 @@ namespace Whiptools
                     string filename = openFileDialog.FileName;
 
                     Color[] inputPalette = Bitmapper.ConvertByteToPalette(File.ReadAllBytes(filename));
-                    string userInput = Microsoft.VisualBasic.Interaction.InputBox("Add at position (0-255):", "Add to Palette", "0");
+                    int maxOffset = 256 - newPalette.Length;
+                    string userInput = Microsoft.VisualBasic.Interaction.InputBox("Add at position (0-" +
+                        maxOffset.ToString() + "):", "Add to Palette", "0");
                     int offset = Convert.ToInt32(userInput);
+                    if (offset < 0 || offset > maxOffset)
+                        throw new Exception();
 
-                    Color[] outputPalette = inputPalette;
+                    int newLength = Math.Max(inputPalette.Length, offset + newPalette.Length);
+                    Color[] outputPalette = new Color[newLength];
+                    for (int i = 0; i < inputPalette.Length; i++)
+                        outputPalette[i] = inputPalette[i];
                     for (int i = 0; i < newPalette.Length; i++)
                         outputPalette[i + offset] = newPalette[i];
                     SavePalette(outputPalette, filename);

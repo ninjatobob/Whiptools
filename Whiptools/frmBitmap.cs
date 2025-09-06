@@ -25,7 +25,7 @@ namespace Whiptools
             };
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                Bitmap bitmap = new Bitmap(pictureBox1.Image);
+                Bitmap bitmap = new Bitmap(pictureBox.Image);
                 string ext = Path.GetExtension(saveFileDialog.FileName);
                 switch (ext.ToLower())
                 {
