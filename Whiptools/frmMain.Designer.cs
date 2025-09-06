@@ -52,17 +52,17 @@ namespace Whiptools
             this.txtImagePath = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.btnLoadImage = new System.Windows.Forms.Button();
-            this.btnConvertImage = new System.Windows.Forms.Button();
+            this.btnSaveBMFile = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnMangle = new System.Windows.Forms.Button();
             this.btnUnmangle = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.btnConvertHMPMIDI = new System.Windows.Forms.Button();
             this.btnConvertRAWAudio = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.btnDecodePasswordIni = new System.Windows.Forms.Button();
             this.btnDecodeFatalIni = new System.Windows.Forms.Button();
             this.btnDecodeCheatAudio = new System.Windows.Forms.Button();
-            this.btnMangle = new System.Windows.Forms.Button();
-            this.btnConvertHMPMIDI = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -218,7 +218,7 @@ namespace Whiptools
             this.groupBox2.Controls.Add(this.txtImagePath);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.btnLoadImage);
-            this.groupBox2.Controls.Add(this.btnConvertImage);
+            this.groupBox2.Controls.Add(this.btnSaveBMFile);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlText;
             this.groupBox2.Location = new System.Drawing.Point(12, 438);
@@ -284,15 +284,15 @@ namespace Whiptools
             this.btnLoadImage.UseVisualStyleBackColor = true;
             this.btnLoadImage.Click += new System.EventHandler(this.btnLoadImage_Click);
             // 
-            // btnConvertImage
+            // btnSaveBMFile
             // 
-            this.btnConvertImage.Location = new System.Drawing.Point(10, 110);
-            this.btnConvertImage.Name = "btnConvertImage";
-            this.btnConvertImage.Size = new System.Drawing.Size(536, 36);
-            this.btnConvertImage.TabIndex = 4;
-            this.btnConvertImage.Text = "Convert Image to Bitmap";
-            this.btnConvertImage.UseVisualStyleBackColor = true;
-            this.btnConvertImage.Click += new System.EventHandler(this.btnConvertImage_Click);
+            this.btnSaveBMFile.Location = new System.Drawing.Point(10, 110);
+            this.btnSaveBMFile.Name = "btnSaveBMFile";
+            this.btnSaveBMFile.Size = new System.Drawing.Size(536, 36);
+            this.btnSaveBMFile.TabIndex = 4;
+            this.btnSaveBMFile.Text = "Save BM File";
+            this.btnSaveBMFile.UseVisualStyleBackColor = true;
+            this.btnSaveBMFile.Click += new System.EventHandler(this.btnSaveBMFile_Click);
             // 
             // groupBox3
             // 
@@ -304,6 +304,16 @@ namespace Whiptools
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "File Mangling";
+            // 
+            // btnMangle
+            // 
+            this.btnMangle.Location = new System.Drawing.Point(282, 19);
+            this.btnMangle.Name = "btnMangle";
+            this.btnMangle.Size = new System.Drawing.Size(264, 36);
+            this.btnMangle.TabIndex = 1;
+            this.btnMangle.Text = "Mangle Files";
+            this.btnMangle.UseVisualStyleBackColor = true;
+            this.btnMangle.Click += new System.EventHandler(this.btnMangleFiles_Click);
             // 
             // btnUnmangle
             // 
@@ -325,6 +335,16 @@ namespace Whiptools
             this.groupBox5.TabIndex = 2;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Audio Tools";
+            // 
+            // btnConvertHMPMIDI
+            // 
+            this.btnConvertHMPMIDI.Location = new System.Drawing.Point(282, 19);
+            this.btnConvertHMPMIDI.Name = "btnConvertHMPMIDI";
+            this.btnConvertHMPMIDI.Size = new System.Drawing.Size(264, 36);
+            this.btnConvertHMPMIDI.TabIndex = 1;
+            this.btnConvertHMPMIDI.Text = "Convert HMP MIDI Format";
+            this.btnConvertHMPMIDI.UseVisualStyleBackColor = true;
+            this.btnConvertHMPMIDI.Click += new System.EventHandler(this.btnConvertHMPMIDI_Click);
             // 
             // btnConvertRAWAudio
             // 
@@ -378,26 +398,6 @@ namespace Whiptools
             this.btnDecodeCheatAudio.UseVisualStyleBackColor = true;
             this.btnDecodeCheatAudio.Click += new System.EventHandler(this.btnDecodeCheatAudio_Click);
             // 
-            // btnMangle
-            // 
-            this.btnMangle.Location = new System.Drawing.Point(282, 19);
-            this.btnMangle.Name = "btnMangle";
-            this.btnMangle.Size = new System.Drawing.Size(264, 36);
-            this.btnMangle.TabIndex = 1;
-            this.btnMangle.Text = "Mangle Files";
-            this.btnMangle.UseVisualStyleBackColor = true;
-            this.btnMangle.Click += new System.EventHandler(this.btnMangleFiles_Click);
-            // 
-            // btnConvertHMPMIDI
-            // 
-            this.btnConvertHMPMIDI.Location = new System.Drawing.Point(282, 19);
-            this.btnConvertHMPMIDI.Name = "btnConvertHMPMIDI";
-            this.btnConvertHMPMIDI.Size = new System.Drawing.Size(264, 36);
-            this.btnConvertHMPMIDI.TabIndex = 1;
-            this.btnConvertHMPMIDI.Text = "Convert HMP MIDI Format";
-            this.btnConvertHMPMIDI.UseVisualStyleBackColor = true;
-            this.btnConvertHMPMIDI.Click += new System.EventHandler(this.btnConvertHMPMIDI_Click);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -442,7 +442,7 @@ namespace Whiptools
         private System.Windows.Forms.Button btnViewBitmal;
         private System.Windows.Forms.Button btnExportPalette;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button btnConvertImage;
+        private System.Windows.Forms.Button btnSaveBMFile;
         private System.Windows.Forms.TextBox txtImagePath;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnLoadImage;

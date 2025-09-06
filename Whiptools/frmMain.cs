@@ -24,7 +24,6 @@ namespace Whiptools
 
         public const string mangledSuffix = "_mang";
         public const string unmangledSuffix = "_unmang";
-        public const string revisedSuffix = "_revised"; // HMPMIDI
 
         public frmMain()
         {
@@ -300,7 +299,7 @@ namespace Whiptools
                             else
                             {
                                 outputfile = folderBrowserDialog.SelectedPath + "\\" +
-                                    Path.GetFileNameWithoutExtension(filename) + revisedSuffix + ".HMP";
+                                    Path.GetFileNameWithoutExtension(filename) + "_revised.HMP";
                                 File.WriteAllBytes(outputfile, outputData);
                                 countSucc++;
                             }
@@ -579,7 +578,7 @@ namespace Whiptools
             }
         }
 
-        private void btnConvertImage_Click(object sender, EventArgs e)
+        private void btnSaveBMFile_Click(object sender, EventArgs e)
         {
             try
             {
