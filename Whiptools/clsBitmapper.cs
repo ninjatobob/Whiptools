@@ -7,18 +7,6 @@ namespace Whiptools
 {
     class Bitmapper
     {
-        public static byte[] CreateRGBArray(byte[] bitmapArray, Color[] palette)
-        {
-            byte[] output = new byte[bitmapArray.Length * 3];
-            for (int i = 0; i < bitmapArray.Length; i++)
-            {
-                output[i * 3] = palette[bitmapArray[i]].B;
-                output[i * 3 + 1] = palette[bitmapArray[i]].G;
-                output[i * 3 + 2] = palette[bitmapArray[i]].R;
-            }
-            return output;
-        }
-
         public static Color[] ConvertByteToPalette(byte[] inputArray)
         {
             Color[] output = new Color[inputArray.Length / 3];
@@ -32,9 +20,28 @@ namespace Whiptools
             return output;
         }
 
-        private static int Convert6BitTo8Bit(int input)
+        public static Bitmap ConvertPaletteToBitmap(Color[] palette)
         {
-            return (input << 2) + (input >> 4);
+            using (Bitmap bitmap = new Bitmap(palette.Length, 1, PixelFormat.Format24bppRgb))
+            {
+                for (int i = 0; i < palette.Length; i++)
+                {
+                    bitmap.SetPixel(i, 0, palette[i]);
+                }
+                return new Bitmap(bitmap);
+            }
+        }
+
+        public static byte[] CreateRGBArray(byte[] bitmapArray, Color[] palette)
+        {
+            byte[] output = new byte[bitmapArray.Length * 3];
+            for (int i = 0; i < bitmapArray.Length; i++)
+            {
+                output[i * 3] = palette[bitmapArray[i]].B;
+                output[i * 3 + 1] = palette[bitmapArray[i]].G;
+                output[i * 3 + 2] = palette[bitmapArray[i]].R;
+            }
+            return output;
         }
 
         public static Bitmap CreateBitmapFromRGB(int width, int height, byte[] rgbArray)
@@ -83,6 +90,18 @@ namespace Whiptools
             return output;
         }
 
+        public static byte[] GetPaletteArray(Color[] palette)
+        {
+            byte[] output = new byte[palette.Length * 3];
+            for (int i = 0; i < palette.Length; i++)
+            {
+                output[i * 3] = (byte)(palette[i].R >> 2);
+                output[i * 3 + 1] = (byte)(palette[i].G >> 2);
+                output[i * 3 + 2] = (byte)(palette[i].B >> 2);
+            }
+            return output;
+        }
+
         public static byte[] GetBitmapArray(Bitmap bitmap, Color[] palette)
         {
             int width = bitmap.Width;
@@ -106,28 +125,11 @@ namespace Whiptools
             return output;
         }
 
-        public static byte[] GetPaletteArray(Color[] palette)
-        {
-            byte[] output = new byte[palette.Length * 3];
-            for (int i = 0; i < palette.Length; i++)
-            {
-                output[i * 3] = (byte)(palette[i].R >> 2);
-                output[i * 3 + 1] = (byte)(palette[i].G >> 2);
-                output[i * 3 + 2] = (byte)(palette[i].B >> 2);
-            }
-            return output;
-        }
+        // utils
 
-        public static Bitmap ConvertPaletteToBitmap(Color[] palette)
+        private static int Convert6BitTo8Bit(int input)
         {
-            using (Bitmap bitmap = new Bitmap(palette.Length, 1, PixelFormat.Format24bppRgb))
-            {
-                for (int i = 0; i < palette.Length; i++)
-                {
-                    bitmap.SetPixel(i, 0, palette[i]);
-                }
-                return new Bitmap(bitmap);
-            }
+            return (input << 2) + (input >> 4);
         }
     }
 }
