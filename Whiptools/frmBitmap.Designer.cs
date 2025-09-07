@@ -33,14 +33,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // pictureBox
             // 
             this.pictureBox.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox.Name = "pictureBox1";
+            this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(259, 170);
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
-            this.pictureBox.Click += new System.EventHandler(this.pictureBox1_Click);
+            this.pictureBox.Click += new System.EventHandler(this.pictureBox_Click);
             // 
             // frmBitmap
             // 
