@@ -28,11 +28,29 @@ namespace Whiptools
         public frmMain()
         {
             InitializeComponent();
+            this.FormClosing += frmMain_FormClosing;
         }
 
         private void frmMain_Load(object sender, EventArgs e)
         {
             // RUBBISH RACER
+        }
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            newBitmap?.Dispose();
+            newBitmap = null;
+            DisposeBitmapForm();
+        }
+
+        private void DisposeBitmapForm()
+        {
+            if (frmBitmap != null && !frmBitmap.IsDisposed)
+            {
+                frmBitmap.Close();
+                frmBitmap.Dispose();
+                frmBitmap = null;
+            }
         }
 
         // file unmangling
@@ -69,6 +87,7 @@ namespace Whiptools
                             int countSucc = 0;
                             int countFail = 0;
                             string displayoutputfile = ""; // for msgbox only
+                            int firstFileSet = 0;
                             var filelist = openDialog.FileNames
                                 .Select(f => new FileInfo(f))
                                 .OrderByDescending(fi => fi.Length);
@@ -89,7 +108,8 @@ namespace Whiptools
                                             (unmangle ? unmangledSuffix : mangledSuffix) + Path.GetExtension(fi.FullName);
                                         File.WriteAllBytes(outputfile, outputData);
                                         Interlocked.Increment(ref countSucc);
-                                        displayoutputfile = outputfile;
+                                        if (Interlocked.CompareExchange(ref firstFileSet, 1, 0) == 0)
+                                            displayoutputfile = outputfile;
                                     }
                                 }
                                 catch
@@ -453,24 +473,25 @@ namespace Whiptools
                 {
                     if (saveDialog.ShowDialog() == DialogResult.OK)
                     {
-                        var bitmap = Bitmapper.ConvertPaletteToBitmap(paletteData);
-                        string ext = Path.GetExtension(saveDialog.FileName);
-                        switch (ext.ToLower())
+                        using (var bitmap = Bitmapper.ConvertPaletteToBitmap(paletteData))
                         {
-                            case ".png":
-                                bitmap.Save(saveDialog.FileName, ImageFormat.Png);
-                                MessageBox.Show($"Saved {saveDialog.FileName}", "RACE OVER",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                break;
-                            case ".bmp":
-                                bitmap.Save(saveDialog.FileName, ImageFormat.Bmp);
-                                MessageBox.Show($"Saved {saveDialog.FileName}", "RACE OVER",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                break;
-                            default:
-                                throw new Exception();
+                            string ext = Path.GetExtension(saveDialog.FileName);
+                            switch (ext.ToLower())
+                            {
+                                case ".png":
+                                    bitmap.Save(saveDialog.FileName, ImageFormat.Png);
+                                    MessageBox.Show($"Saved {saveDialog.FileName}", "RACE OVER",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    break;
+                                case ".bmp":
+                                    bitmap.Save(saveDialog.FileName, ImageFormat.Bmp);
+                                    MessageBox.Show($"Saved {saveDialog.FileName}", "RACE OVER",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    break;
+                                default:
+                                    throw new Exception();
+                            }
                         }
-                        bitmap.Dispose();
                     }
                 }
             }
@@ -489,6 +510,7 @@ namespace Whiptools
                 int bitmapWidth = Convert.ToInt32(double.Parse(txtDimWidth.Text));
                 int bitmapHeight = Convert.ToInt32(Math.Ceiling(bitmapData.Length / (double)bitmapWidth));
 
+                DisposeBitmapForm();
                 frmBitmap = new frmBitmap();
                 frmBitmap.pictureBox.Image = Bitmapper.CreateBitmapFromRGB(bitmapWidth, bitmapHeight, rgbData);
                 frmBitmap.pictureBox.Location = new Point(0, 0);

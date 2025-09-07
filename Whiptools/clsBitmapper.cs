@@ -23,12 +23,10 @@ namespace Whiptools
 
         public static Bitmap ConvertPaletteToBitmap(Color[] palette)
         {
-            using (var bitmap = new Bitmap(palette.Length, 1, PixelFormat.Format24bppRgb))
-            {
-                for (int i = 0; i < palette.Length; i++)
-                    bitmap.SetPixel(i, 0, getColorHigh(palette[i]));
-                return new Bitmap(bitmap);
-            }
+            var bitmap = new Bitmap(palette.Length, 1, PixelFormat.Format24bppRgb);
+            for (int i = 0; i < palette.Length; i++)
+                bitmap.SetPixel(i, 0, GetColorHigh(palette[i]));
+            return bitmap;
         }
 
         public static byte[] CreateRGBArray(byte[] bitmapArray, Color[] palette)
@@ -36,6 +34,8 @@ namespace Whiptools
             byte[] output = new byte[bitmapArray.Length * 3];
             for (int i = 0; i < bitmapArray.Length; i++)
             {
+                if (bitmapArray[i] >= palette.Length)
+                    throw new Exception();
                 output[i * 3] = palette[bitmapArray[i]].B;
                 output[i * 3 + 1] = palette[bitmapArray[i]].G;
                 output[i * 3 + 2] = palette[bitmapArray[i]].R;
@@ -45,18 +45,16 @@ namespace Whiptools
 
         public static Bitmap CreateBitmapFromRGB(int width, int height, byte[] rgbArray)
         {
-            using (var bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb))
-            {
-                var bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height),
-                    ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
-                int stride = bitmapData.Stride;
-                IntPtr ptr = bitmapData.Scan0;
-                byte[] rgbArrayHigh = getByteArrayHigh(rgbArray);
-                for (int y = 0; y < height; y++)
-                    Marshal.Copy(rgbArrayHigh, y * width * 3, ptr + y * stride, width * 3);
-                bitmap.UnlockBits(bitmapData);
-                return new Bitmap(bitmap);
-            }
+            var bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+            var bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height),
+                ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+            int stride = bitmapData.Stride;
+            IntPtr ptr = bitmapData.Scan0;
+            byte[] rgbArrayHigh = GetByteArrayHigh(rgbArray);
+            for (int y = 0; y < height; y++)
+                Marshal.Copy(rgbArrayHigh, y * width * 3, ptr + y * stride, width * 3);
+            bitmap.UnlockBits(bitmapData);
+            return bitmap;
         }
 
         // bitmap creator
@@ -66,7 +64,7 @@ namespace Whiptools
             var hashColors = new HashSet<Color>();
             for (int y = 0; y < bitmap.Height; y++)
                 for (int x = 0; x < bitmap.Width; x++)
-                    hashColors.Add(getColorLow(bitmap.GetPixel(x, y)));
+                    hashColors.Add(GetColorLow(bitmap.GetPixel(x, y)));
             Color[] output = new Color[hashColors.Count];
             hashColors.CopyTo(output);
             return output;
@@ -89,59 +87,67 @@ namespace Whiptools
             int width = bitmap.Width;
             int height = bitmap.Height;
             byte[] output = new byte[width * height];
+
+            var paletteDict = new Dictionary<Color, byte>();
+            for (int i = 0; i < palette.Length; i++)
+                paletteDict[palette[i]] = (byte)i;
+
+            var bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height),
+                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            int stride = bitmapData.Stride;
+            byte[] pixelData = new byte[stride * height];
+            Marshal.Copy(bitmapData.Scan0, pixelData, 0, pixelData.Length);
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    Color colorLow = getColorLow(bitmap.GetPixel(x, y));
-                    bool found = false;
-                    for (int i = 0; i < palette.Length; i++)
-                    {
-                        if (palette[i] == colorLow)
-                        {
-                            output[y * width + x] = (byte)i;
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found)
+                    int offset = y * stride + x * 3;
+                    byte B = pixelData[offset];
+                    byte G = pixelData[offset + 1];
+                    byte R = pixelData[offset + 2];
+                    Color colorLow = GetColorLow(Color.FromArgb(R, G, B));
+
+                    if (paletteDict.TryGetValue(colorLow, out byte paletteIndex))
+                        output[y * width + x] = paletteIndex;
+                    else
                         return Array.Empty<byte>();
                 }
             }
+            bitmap.UnlockBits(bitmapData);
             return output;
         }
 
         // utils
 
-        private static byte[] getByteArrayHigh(byte[] input)
+        private static byte[] GetByteArrayHigh(byte[] input)
         {
             byte[] output = new byte[input.Length];
             for (int i = 0; i < input.Length; i++)
-                output[i] = (byte)getIntHigh(Convert.ToInt32(input[i]));
+                output[i] = (byte)GetIntHigh(Convert.ToInt32(input[i]));
             return output;
         }
 
-        private static Color getColorHigh(Color input)
+        private static Color GetColorHigh(Color input)
         {
             return Color.FromArgb(
-                getIntHigh(input.R),
-                getIntHigh(input.G),
-                getIntHigh(input.B));
+                GetIntHigh(input.R),
+                GetIntHigh(input.G),
+                GetIntHigh(input.B));
         }
-        private static Color getColorLow(Color input)
+        private static Color GetColorLow(Color input)
         {
             return Color.FromArgb(
-                getIntLow(input.R),
-                getIntLow(input.G),
-                getIntLow(input.B));
+                GetIntLow(input.R),
+                GetIntLow(input.G),
+                GetIntLow(input.B));
         }
 
-        private static int getIntHigh(int input)
+        private static int GetIntHigh(int input)
         {
             return (input << 2) + (input >> 4);
         }
 
-        private static int getIntLow(int input)
+        private static int GetIntLow(int input)
         {
             return (input >> 2);
         }

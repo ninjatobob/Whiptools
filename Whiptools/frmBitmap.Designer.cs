@@ -55,7 +55,6 @@
             this.Text = "frmBitmap";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
-
         }
 
         #endregion

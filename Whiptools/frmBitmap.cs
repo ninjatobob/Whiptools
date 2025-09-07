@@ -13,6 +13,16 @@ namespace Whiptools
         public frmBitmap()
         {
             InitializeComponent();
+            this.FormClosing += frmBitmap_FormClosing;
+        }
+
+        private void frmBitmap_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (pictureBox?.Image != null)
+            {
+                pictureBox.Image.Dispose();
+                pictureBox.Image = null;
+            }
         }
 
         private void pictureBox_Click(object sender, EventArgs e)

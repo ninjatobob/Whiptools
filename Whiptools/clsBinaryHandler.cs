@@ -20,9 +20,9 @@ namespace Whiptools
 
                 if (byteValue <= 0x3F) // 0x00 to 0x3F: read bytes from input
                 {
-                    var tempArray = new byte[byteValue];
-                    Array.Copy(inputData, inputPos + 1, tempArray, 0, byteValue);
-                    Array.Copy(tempArray, 0, outputData, outputPos, byteValue);
+                    if (inputPos + 1 + byteValue > inputData.Length || outputPos + byteValue > outputLength)
+                        throw new Exception();
+                    Array.Copy(inputData, inputPos + 1, outputData, outputPos, byteValue);
                     inputPos += byteValue + 1;
                     outputPos += byteValue;
                 }
