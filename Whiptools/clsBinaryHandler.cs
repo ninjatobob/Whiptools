@@ -8,7 +8,7 @@ namespace Whiptools
         public static byte[] Unmangle(byte[] inputData)
         {
             int outputLength = BitConverter.ToInt32(inputData, 0); // output length is first 4 bytes of input
-            byte[] outputData = new byte[outputLength];
+            var outputData = new byte[outputLength];
 
             // start positions
             int inputPos = 4;
@@ -20,7 +20,7 @@ namespace Whiptools
 
                 if (byteValue <= 0x3F) // 0x00 to 0x3F: read bytes from input
                 {
-                    byte[] tempArray = new byte[byteValue];
+                    var tempArray = new byte[byteValue];
                     Array.Copy(inputData, inputPos + 1, tempArray, 0, byteValue);
                     Array.Copy(tempArray, 0, outputData, outputPos, byteValue);
                     inputPos += byteValue + 1;
@@ -358,7 +358,7 @@ namespace Whiptools
         public static byte[] Decode(byte[] inputData, int a0, int a1)
         {
             int length = inputData.Length;
-            byte[] outputData = new byte[length];
+            var outputData = new byte[length];
 
             for (int i = 0; i < length; i++)
             {

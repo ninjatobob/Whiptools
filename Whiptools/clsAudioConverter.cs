@@ -6,12 +6,12 @@ namespace Whiptools
 {
     class WavAudio
     {
-        static int sampleRate = 11025;
-        static short bitDepth = 8;
+        private const int sampleRate = 11025;
+        private const short bitDepth = 8;
 
         public static byte[] ConvertRawToWav(byte[] rawBytes)
         {
-            using (MemoryStream outputStream = new MemoryStream())
+            using (var outputStream = new MemoryStream())
             {
                 WriteWavHeader(outputStream, rawBytes.Length, sampleRate, bitDepth);
                 outputStream.Write(rawBytes, 0, rawBytes.Length);
@@ -59,7 +59,7 @@ namespace Whiptools
 
         static void WriteString(Stream stream, string value)
         {
-            byte[] bytes = System.Text.Encoding.ASCII.GetBytes(value);
+            var bytes = Encoding.ASCII.GetBytes(value);
             stream.Write(bytes, 0, bytes.Length);
         }
     }
@@ -77,7 +77,7 @@ namespace Whiptools
             if (CheckOriginalFormat(inputData)) // must be original HMP file format
             {
                 int inputLen = inputData.Length;
-                byte[] outputData = new byte[inputLen + chunkStartRevised - chunkStartOrig];
+                var outputData = new byte[inputLen + chunkStartRevised - chunkStartOrig];
 
                 // up to 0x308
                 Array.Copy(inputData, 0, outputData, 0, chunkStartOrig);
@@ -86,7 +86,7 @@ namespace Whiptools
                 Array.Copy(inputData, chunkStartOrig, outputData, chunkStartRevised, inputLen - chunkStartOrig);
 
                 // update header
-                byte[] prefixBytes = Encoding.ASCII.GetBytes(headerRevised);
+                var prefixBytes = Encoding.ASCII.GetBytes(headerRevised);
                 Array.Copy(prefixBytes, 0, outputData, 0, prefixBytes.Length);
 
                 return outputData;
@@ -104,8 +104,8 @@ namespace Whiptools
                 return false;
 
             // check input starts with original padded header
-            byte[] paddedBytes = new byte[headerLength];
-            byte[] prefixBytes = Encoding.ASCII.GetBytes(headerOrig);
+            var paddedBytes = new byte[headerLength];
+            var prefixBytes = Encoding.ASCII.GetBytes(headerOrig);
             Array.Copy(prefixBytes, 0, paddedBytes, 0, prefixBytes.Length);
             for (int i = 0; i < headerLength; i++)
             {
