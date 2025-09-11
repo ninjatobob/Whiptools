@@ -1,5 +1,5 @@
 # Whiptools
-Tools for decoding, encoding and viewing Fatal Racing/Whiplash game files:
+Tools for decoding, encoding and viewing _Fatal Racing/Whiplash_ game files:
 
 - Unmangler and mangler for .BM, .DRH, .HMP, .KC, .RAW, .RBP, .RFR, .RGE, .RSS and .TRK files
 - Decoding of cheat audio from .KC to .RAW format
@@ -16,7 +16,7 @@ Tools for decoding, encoding and viewing Fatal Racing/Whiplash game files:
 - [Implementation of the unmangling algorithm](https://gist.github.com/samunders-core/1acaadc064f203e4f2ab769c7dfabeda) by [@samunders-core](https://github.com/samunders-core)
 - [Decompilation of sound.c](https://github.com/Zizin13/ROLLER/blob/b16cacf124f4ff2654fc3f8f77e7760780c49879/PROJECTS/ROLLER/sound.c) by [@Zizin13](https://github.com/Zizin13)
 
-See the [**Whiptools wiki**](https://github.com/ninjatobob/Whiptools/wiki) for further information on file formats.
+See the [**Whiptools wiki**](https://github.com/ninjatobob/Whiptools/wiki) for further information on the [unmangling](https://github.com/ninjatobob/Whiptools/wiki#file-unmangling) and [decoding](https://github.com/ninjatobob/Whiptools/wiki#file-decoding) algorithms, [file formats](https://github.com/ninjatobob/Whiptools/wiki#file-formats) and [game versions](https://github.com/ninjatobob/Whiptools/wiki/Game-version-info).
 
 # YOU NEED MORE PRACTICE
 RACE OVER
